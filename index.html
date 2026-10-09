@@ -304,19 +304,19 @@ async function createStudentLink(){
  if(sharingBusy)return;sharingBusy=true;
  var b=E("shareStudentLink"),old=b.textContent;b.disabled=true;b.textContent="SAVING…";E("shareStatus").textContent="Saving this vocabulary set…";
  try{
-  var response=await fetch(VOCAB_API+"/sets",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({title:currentSetTitle(),language:E("language").value,pairs:pairs})});
+  var controller=new AbortController();var timer=setTimeout(function(){controller.abort()},12000);var response;try{response=await fetch(VOCAB_API+"/sets",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({title:currentSetTitle(),language:E("language").value,pairs:pairs}),signal:controller.signal})}finally{clearTimeout(timer)}
   var data=null;try{data=await response.json()}catch(pe){}
   if(!response.ok)throw new Error(data&&(data.error||data.message)?(data.error||data.message):"HTTP "+response.status);
   var setId=data&&(data.id||data.setId||(data.set&&data.set.id));if(!setId)throw new Error("No set ID returned.");
   var u=new URL(location.href);u.search="";u.hash="set="+encodeURIComponent(setId);lastStudentLink=u.toString();
-  E("copyStudentLink").style.display="block";E("shareStatus").textContent="✓ STUDENT LINK READY — permanent set "+setId+" · "+pairs.length+" words.";
- }catch(err){console.error("Could not create vocabulary set:",err);lastStudentLink="";E("copyStudentLink").style.display="none";E("shareStatus").textContent="Could not save this set. Please try again."}
+  E("shareStatus").textContent="✓ LINK READY: "+lastStudentLink;
+ }catch(err){console.error("Could not create vocabulary set:",err);lastStudentLink="";E("shareStatus").textContent="Could not save this set: "+(err.name==="AbortError"?"Request timed out":err.message||"Unknown error")}
  finally{sharingBusy=false;b.disabled=false;b.textContent=old}
 }
 async function copyStudentLink(){
  if(!lastStudentLink)return;
  try{await navigator.clipboard.writeText(lastStudentLink)}catch(e){var x=document.createElement("textarea");x.value=lastStudentLink;document.body.appendChild(x);x.select();document.execCommand("copy");x.remove()}
- E("shareStatus").textContent="✓ LINK COPIED — ready to send to students."
+ E("shareStatus").textContent="✓ LINK COPIED: "+lastStudentLink
 }
 function normalizeLoadedPairs(data){var pairs=data&&(data.pairs||data.vocabulary||(data.set&&(data.set.pairs||data.set.vocabulary)));if(typeof pairs==="string"){try{pairs=JSON.parse(pairs)}catch(e){pairs=null}}return Array.isArray(pairs)?pairs:null}
 async function loadStudentSet(){
