@@ -36,8 +36,13 @@
   #game .mobile-controls{grid-template-rows:repeat(2,43px);margin-top:3px}
   #game .mobile-controls button{min-height:40px;font-size:18px}
 }
+
+.shareRow{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.shareRow button{flex:1 1 180px}.shareStatus{font-size:12px;font-weight:bold;color:#294361;line-height:1.5;margin-top:5px}
+#studentIntro{display:none}.studentTitle{font:900 clamp(22px,3vw,34px) "Courier New";color:#176b43;margin:0 0 22px;text-transform:uppercase;overflow-wrap:anywhere}.studentMeta{font:900 clamp(14px,2vw,18px) "Courier New";color:#152945;margin-bottom:28px}.howTo{margin-top:18px}.howTo summary{cursor:pointer;font:900 14px "Courier New";color:#152945}.howTo div{font:700 12px "Courier New";line-height:1.5;margin:10px auto 0;max-width:620px}
+body.studentMode{background:#172b52}body.studentMode .app{width:min(1120px,calc(100vw - 28px));min-height:calc(100vh - 28px);margin:14px auto;padding:22px;background:#213f6d;border:5px solid #102744;box-shadow:0 0 0 4px #f3d64e}body.studentMode .logo{color:#f3d64e;font-size:clamp(34px,5vw,58px);margin:4px 0 28px}body.studentMode #teacherGrid{display:none!important}body.studentMode #menu{display:block}body.studentMode #studentIntro{display:block;width:min(760px,92%);margin:0 auto;padding:34px 28px;background:#f4e7bd;border:5px solid #152945;color:#152945;text-align:center;box-shadow:inset 0 0 0 3px #fff5d7}body.studentMode #studentPlay{display:block;width:100%;margin:0;background:#79d85b;color:#102744;font-size:clamp(18px,2.5vw,24px);padding:14px}
+@media(max-width:760px){body.studentMode .app{width:calc(100vw - 16px);min-height:calc(100vh - 16px);margin:8px auto;padding:14px}body.studentMode .logo{margin-bottom:18px}body.studentMode #studentIntro{width:100%;padding:24px 14px}}
 </style></head><body><main class="app"><div class="logo">WORD SNAKE</div>
-<section id="menu" class="screen active"><div class="grid"><div class="card"><h2>GAME SETTINGS</h2><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div><div class="help"><b>Language</b></div><select id="language"><option value="de-DE">German</option><option value="es-ES">Spanish</option><option value="da-DK">Danish</option><option value="en-US">English</option></select></div><div><div class="help"><b>Vocabulary</b></div><select id="category"></select></div></div><div id="voiceCheck" class="voiceCheck"><span class="voiceWait">Checking pronunciation voice…</span></div><button id="testVoice" class="yellow" type="button">🔊 TEST VOICE</button><div class="preview"><b>Controls</b><br>Arrow keys / WASD = steer<br>P = pause<br><br>Eat the correct target-language word. Wrong words cost a life. The snake wraps around the edges.</div><button id="play" class="primary wide">PLAY</button></div><div class="card"><h2>PASTE QUIZLET WORDS</h2><div class="help">Paste term/definition pairs. Built-in lists remain editable.</div><textarea id="words">gucken	to watch, to look at
+<section id="menu" class="screen active"><div id="studentIntro"><div id="studentSetTitle" class="studentTitle">LOADING VOCABULARY…</div><div id="studentSetMeta" class="studentMeta">PLEASE WAIT</div><button id="studentPlay" class="primary" type="button" disabled>PLAY</button><details class="howTo"><summary>▶ HOW TO PLAY</summary><div>ARROW KEYS / WASD = STEER<br>Eat the correct target-language word. Wrong words cost a life. The snake wraps around the edges.</div></details></div><div id="teacherGrid" class="grid"><div class="card"><h2>GAME SETTINGS</h2><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div><div class="help"><b>Language</b></div><select id="language"><option value="de-DE">German</option><option value="es-ES">Spanish</option><option value="da-DK">Danish</option><option value="en-US">English</option></select></div><div><div class="help"><b>Vocabulary</b></div><select id="category"></select></div></div><div id="voiceCheck" class="voiceCheck"><span class="voiceWait">Checking pronunciation voice…</span></div><button id="testVoice" class="yellow" type="button">🔊 TEST VOICE</button><div class="preview"><b>Controls</b><br>Arrow keys / WASD = steer<br>P = pause<br><br>Eat the correct target-language word. Wrong words cost a life. The snake wraps around the edges.</div><button id="play" class="primary wide">PLAY</button></div><div class="card"><h2>PASTE QUIZLET WORDS</h2><div class="help">Paste term/definition pairs. Built-in lists remain editable.</div><textarea id="words">gucken	to watch, to look at
 fahren	to drive
 essen	to eat
 trinken	to drink
@@ -48,7 +53,7 @@ sprechen	to speak
 gehen	to go
 kommen	to come
 spielen	to play
-lernen	to learn</textarea><button id="swap">⇄ SWAP SIDES</button><div id="preview" class="preview"></div><div id="error" class="error"></div></div>
+lernen	to learn</textarea><div class="shareRow"><button id="createStudentLink" class="pink" type="button">🔗 CREATE STUDENT LINK</button><button id="copyStudentLink" type="button" style="display:none">📋 COPY LINK</button></div><div id="shareStatus" class="shareStatus" aria-live="polite">Share the vocabulary shown above using a permanent student link.</div><button id="swap">⇄ SWAP SIDES</button><div id="preview" class="preview"></div><div id="error" class="error"></div></div>
 </div></section>
 <section id="game" class="screen"><div class="hud"><div>SCORE <span id="score">0</span> · <span id="lives">❤❤❤</span></div><div id="target" class="target"></div><div id="progress" class="progress"></div></div><div id="wrap" class="wrap"><canvas id="canvas"></canvas><div id="toast" class="toast"></div><div id="pauseOverlay" class="overlay"><div class="big" style="color:#f2d64b">PAUSED</div></div><div id="gameOver" class="overlay"><div><div class="big">GAME OVER</div><div class="msg">Nice try, your grandma would be proud</div><button id="again" class="primary">PLAY AGAIN</button><button id="overMenu" class="pink">MAIN MENU</button></div></div></div><div class="buttons"><button id="pause" class="yellow">PAUSE</button><button id="restart">RESTART</button><button id="mainMenu" class="pink">MAIN MENU</button><button id="fullscreen" class="yellow">⛶ EXPAND GAME</button><button id="sound">🔊 SOUND ON</button></div><div class="mobile-controls" aria-label="Snake touch steering">
 <button type="button" class="up" id="touchUp" aria-label="Steer up">▲</button>
@@ -227,5 +232,48 @@ canvas.addEventListener("pointerup",function(ev){
 },{passive:true});
 canvas.addEventListener("pointercancel",function(){swipeStart=null});
 window.addEventListener("blur",function(){swipeStart=null});
-window.addEventListener("resize",resize);cats(false);preview();
+window.addEventListener("resize",resize);
+
+var VOCAB_API="https://boringteacher-vocabulary-api.mcproductionsdk.workers.dev";
+var lastStudentLink="",sharingBusy=false;
+function currentSetTitle(){var s=E("category");return s&&s.value!=="custom"?s.options[s.selectedIndex].text:"Custom Vocabulary"}
+async function createStudentLink(){
+ var pairs=parse(ta.value);
+ if(pairs.length<5){E("shareStatus").textContent="Please add at least 5 valid word pairs first.";return}
+ if(sharingBusy)return;sharingBusy=true;
+ var b=E("createStudentLink"),old=b.textContent;b.disabled=true;b.textContent="SAVING…";E("shareStatus").textContent="Saving this vocabulary set…";
+ try{
+  var response=await fetch(VOCAB_API+"/sets",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({title:currentSetTitle(),language:E("language").value,pairs:pairs})});
+  var data=null;try{data=await response.json()}catch(pe){}
+  if(!response.ok)throw new Error(data&&(data.error||data.message)?(data.error||data.message):"HTTP "+response.status);
+  var setId=data&&(data.id||data.setId||(data.set&&data.set.id));if(!setId)throw new Error("No set ID returned.");
+  var u=new URL(location.href);u.search="";u.hash="set="+encodeURIComponent(setId);lastStudentLink=u.toString();
+  E("copyStudentLink").style.display="block";E("shareStatus").textContent="✓ STUDENT LINK READY — permanent set "+setId+" · "+pairs.length+" words.";
+ }catch(err){console.error("Could not create vocabulary set:",err);lastStudentLink="";E("copyStudentLink").style.display="none";E("shareStatus").textContent="Could not save this set. Please try again."}
+ finally{sharingBusy=false;b.disabled=false;b.textContent=old}
+}
+async function copyStudentLink(){
+ if(!lastStudentLink)return;
+ try{await navigator.clipboard.writeText(lastStudentLink)}catch(e){var x=document.createElement("textarea");x.value=lastStudentLink;document.body.appendChild(x);x.select();document.execCommand("copy");x.remove()}
+ E("shareStatus").textContent="✓ LINK COPIED — ready to send to students."
+}
+function normalizeLoadedPairs(data){var pairs=data&&(data.pairs||data.vocabulary||(data.set&&(data.set.pairs||data.set.vocabulary)));if(typeof pairs==="string"){try{pairs=JSON.parse(pairs)}catch(e){pairs=null}}return Array.isArray(pairs)?pairs:null}
+async function loadStudentSet(){
+ if(!location.hash.startsWith("#set="))return false;
+ var setId="";try{setId=decodeURIComponent(location.hash.slice(5)).trim()}catch(e){return false}if(!setId)return false;
+ document.body.classList.add("studentMode");E("studentSetTitle").textContent="LOADING VOCABULARY…";E("studentSetMeta").textContent="PLEASE WAIT";E("studentPlay").disabled=true;
+ try{
+  var response=await fetch(VOCAB_API+"/sets/"+encodeURIComponent(setId),{method:"GET",headers:{"Accept":"application/json"}});
+  var data=null;try{data=await response.json()}catch(pe){}
+  if(!response.ok)throw new Error(data&&(data.error||data.message)?(data.error||data.message):"HTTP "+response.status);
+  var pairs=normalizeLoadedPairs(data);if(!pairs||pairs.length<5)throw new Error("Set has fewer than 5 valid word pairs.");
+  var locale=data.language||data.lang||(data.set&&(data.set.language||data.set.lang)),title=data.title||(data.set&&data.set.title)||"Teacher Vocabulary";
+  if(locale&&Array.from(E("language").options).some(function(o){return o.value===locale})){E("language").value=locale;lang=locale;cats(false);updateVoiceCheck()}
+  ta.value=pairs.map(function(pair){return pair[0]+"\t"+pair[1]}).join("\n");E("category").value="custom";preview();
+  E("studentSetTitle").textContent=String(title).toUpperCase();var langName=E("language").options[E("language").selectedIndex].text;
+  E("studentSetMeta").textContent=langName.toUpperCase()+" · "+pairs.length+" WORDS · SET "+setId;E("studentPlay").disabled=false;return true;
+ }catch(err){console.error("Could not load vocabulary set:",err);E("studentSetTitle").textContent="SET COULD NOT BE LOADED";E("studentSetMeta").textContent="CHECK THE LINK OR ASK YOUR TEACHER FOR A NEW ONE";E("studentPlay").disabled=true;return false}
+}
+E("createStudentLink").onclick=createStudentLink;E("copyStudentLink").onclick=copyStudentLink;E("studentPlay").onclick=function(){if(!this.disabled)E("play").click()};window.addEventListener("hashchange",loadStudentSet);
+cats(false);preview();loadStudentSet();
 })();</script></body></html>
