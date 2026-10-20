@@ -1,16 +1,16 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Word Snake — Boring Teacher</title>
-<link rel="stylesheet" href="./styles/menu.css">
+<link rel="stylesheet" href="./styles/menu.css?release=student-unified-20261020">
 <style>
 body{margin:0;background:#10192e;color:#f8f8ff;font-family:"Courier New",monospace}
 #snakeFrame{display:none;width:100%;height:calc(100dvh - 12px);min-height:600px;border:0;background:#16264e}
 #snakeFrame.playing{display:block}
-#app{max-width:1100px;margin:8px auto}
+#app{max-width:1100px;margin:8px auto}#app[hidden]{display:none!important}
 </style></head>
 <body><main id="app"></main><iframe id="snakeFrame" title="Word Snake gameplay" src="./snake-game.html?release=core-20261020"></iframe>
 <script type="module">
-import { mountTeacherMenu,mountStudentMenu } from "./core/menu.js?release=core-20261020";
+import { mountTeacherMenu,mountStudentMenu } from "./core/menu.js?release=student-unified-20261020";
 import { createSharingClient,readStudentSetId } from "./core/sharing.js";
 import { createVoiceService } from "./core/voice.js";
 import { WAREHOUSE_CATEGORIES } from "./core/warehouse-categories.js";
@@ -27,13 +27,13 @@ function deliverSnake(){
 }
 function start(vocabulary){
  pendingVocabulary=vocabulary;
- menu?.destroy();menu=null;root.hidden=true;frame.classList.add("playing");
+ menu?.destroy();menu=null;root.hidden=true;root.style.setProperty('display','none','important');frame.classList.add("playing");
  deliverSnake();
  frame.contentWindow?.postMessage({type:"BT_SNAKE_PING"},location.origin);
  frame.focus();
 }
 function showMenu(forceTeacher=false){
- frame.classList.remove("playing");root.hidden=false;
+ frame.classList.remove("playing");root.hidden=false;root.style.removeProperty('display');
  menu?.destroy();menu=null;voice.cancel();
  menu=!forceTeacher&&readStudentSetId(location.href)?mountStudentMenu(root,{sharing,voice},{...options,studentUrl:location.href,onRecover:()=>{history.replaceState(null,"",location.pathname+location.search);showMenu(true);}}):mountTeacherMenu(root,{sharing,voice},options);
 }
@@ -43,7 +43,7 @@ window.addEventListener("message",e=>{
  if(e.data?.type==="BT_SNAKE_SPEAK"&&typeof e.data.text==="string"&&e.data.text.length<=250&&["es-ES","de-DE","da-DK","en-US"].includes(e.data.language)){void voice.speak(e.data.text,e.data.language);}
  if(e.data?.type==="BT_SNAKE_CANCEL_SPEECH")voice.cancel();
  if(e.data?.type==="BT_SNAKE_MENU"){history.replaceState(null,"",location.pathname+location.search);showMenu(true);}
- if(e.data?.type==="BT_SNAKE_START_FAILED"){frame.classList.remove("playing");root.hidden=false;root.textContent="Word Snake could not start. Please refresh and try again.";}
+ if(e.data?.type==="BT_SNAKE_START_FAILED"){frame.classList.remove("playing");root.hidden=false;root.style.removeProperty('display');root.textContent="Word Snake could not start. Please refresh and try again.";}
 });
 frame.addEventListener("load",()=>{snakeReady=false;frame.contentWindow?.postMessage({type:"BT_SNAKE_PING"},location.origin);});
 showMenu();
