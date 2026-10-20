@@ -1,0 +1,60 @@
+/* Scoped adaptation of approved Word Racer V2.4 teacherMenu / card styling. */
+.bt-core{--ink:#152945;--cream:#f4e7bd;--yellow:#f3d64e;--blue:#17365f;font-family:"Courier New",monospace;color:white;background:var(--blue);border:5px solid #102744;box-shadow:0 0 0 4px var(--yellow);padding:14px;max-width:1120px;margin:12px auto;box-sizing:border-box}
+.bt-core *{box-sizing:border-box}
+.bt-core .bt-logo{text-align:center;font-size:clamp(27px,4vw,44px);font-weight:900;letter-spacing:4px;text-shadow:4px 4px #102744;margin:4px 0 18px}
+.bt-core .teacherMenu{display:grid;grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);gap:12px;align-items:start}
+.bt-core .card{background:var(--cream);color:var(--ink);border:4px solid var(--ink);padding:12px;box-shadow:inset 0 0 0 3px #fff5d7}
+.bt-core h2{color:#b52f49;font-size:18px;margin:0 0 8px}
+.bt-core .help{color:#294361;font-size:13px;font-weight:bold;line-height:1.4}
+.bt-core .settingsFields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.bt-core .fieldLabel{font-size:12px;font-weight:900;color:#294361;margin:0 0 5px;text-transform:uppercase}
+.bt-core textarea,.bt-core select,.bt-core input{width:100%;background:#fff8d9;color:var(--ink);border:4px solid var(--ink);border-radius:0;padding:9px;font:700 14px "Courier New";min-width:0}
+.bt-core textarea{height:min(38vh,285px);min-height:180px;resize:vertical;margin-top:10px}
+.bt-core button{font:900 14px "Courier New";padding:10px 14px;margin:4px 0;border:4px solid var(--ink);background:#5cc5d8;color:#102744;cursor:pointer;box-shadow:inset -3px -3px #2e7c9a,inset 3px 3px #b8f5ee}
+.bt-core button:disabled{opacity:.6;cursor:wait}
+.bt-core .primary{background:#79d85b}.bt-core .yellow{background:var(--yellow)}.bt-core .pink{background:#ef6c88}
+.bt-core .menuButton{width:100%;margin:8px 0 0}
+.bt-core .preview{margin-top:8px;padding:9px;background:#d8eef0;color:#19324e;border:3px solid #19324e;font-size:12px}
+.bt-core .error{color:#b9223e;min-height:18px;font-weight:bold;font-size:12px}
+.bt-core .teacherHowTo{margin-top:12px;padding:10px;background:#fff8d9;border:3px solid var(--ink)}
+.bt-core summary{cursor:pointer;font-weight:900;font-size:13px}
+.bt-core .shareBlock{margin-top:12px;padding-top:12px;border-top:3px solid var(--ink)}
+.bt-core .finalPlay{margin:14px 0 0;padding:14px;font-size:20px;width:100%}
+.bt-core .studentIntro{max-width:760px;margin:0 auto;background:var(--cream);color:var(--ink);border:5px solid var(--ink);padding:34px 28px;text-align:center;box-shadow:inset 0 0 0 3px #fff5d7}
+.bt-core .studentTitle{font-weight:900;font-size:clamp(22px,3vw,34px);color:#176b43;text-transform:uppercase}
+.bt-core .studentMeta{font-weight:900;margin:20px 0}
+.bt-core .studentIntro button{width:100%;font-size:20px}
+.bt-core .studentIntro details{margin-top:18px}
+.bt-core a{color:#123d83;overflow-wrap:anywhere}
+@media(max-width:760px){.bt-core .teacherMenu{grid-template-columns:1fr;gap:10px}.bt-core .settingsFields{grid-template-columns:1fr}.bt-core textarea{height:34vh;min-height:210px;font-size:16px}.bt-core select,.bt-core button{min-height:48px}.bt-core .studentIntro{padding:24px 14px}}
+
+/* Exact approved Word Racer menu structure and key dimensions, scoped to Core. */
+.bt-core .screen{display:none}.bt-core .screen.active{display:block}
+.bt-core .teacherMenu{display:grid;grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);gap:12px;align-items:start}
+.bt-core .stepHint{font:700 11px "Courier New";line-height:1.35;margin:5px 0 8px;color:#19324e}
+.bt-core .vocabCard textarea{margin-top:10px}
+.bt-core #shareStudentLink{font-size:16px;padding:12px}
+.bt-core .teacherHowTo div{font:700 11px "Courier New";line-height:1.5;margin-top:8px}
+.bt-core #menu .studentIntro{display:none}
+.bt-core .wide{width:100%;font-size:18px}
+@media(max-width:760px){.bt-core .teacherMenu{grid-template-columns:1fr;gap:10px}.bt-core .settingsFields{grid-template-columns:1fr}.bt-core .card{padding:12px}.bt-core textarea{height:34vh;min-height:210px;font-size:16px}.bt-core select{min-height:48px;font-size:16px}.bt-core button{min-height:48px}.bt-core #shareStudentLink,.bt-core .finalPlay{min-height:56px}}
+
+
+/* Word Warehouse V0.6.2-inspired teacher menu — scoped to isolated Core preview. */
+.bt-core:has(.warehouseCols){background:#10192e;border:0;box-shadow:none;max-width:1050px;color:#f8f8ff}
+.bt-core:has(.warehouseCols) .bt-logo{color:#ffe082;text-shadow:3px 3px #000}
+.bt-core .warehouseCols{grid-template-columns:1fr 1.25fr;gap:12px}
+.bt-core .warehousePanel{background:#233958;color:#f8f8ff;border:3px solid #7bbaf3;padding:15px;box-shadow:5px 5px #050b17}
+.bt-core .warehousePanel h2{color:#ffe082;font-size:18px}
+.bt-core .warehousePanel .help,.bt-core .warehousePanel .fieldLabel{color:#bfd3ed}
+.bt-core .warehousePanel .fieldLabel{display:block;margin:12px 0 5px}
+.bt-core .warehousePanel select,.bt-core .warehousePanel textarea{background:#f5f8ff;border:3px solid #10192e;color:#18243b}
+.bt-core .warehousePanel textarea{height:220px;margin-top:10px}
+.bt-core .warehousePanel button{background:#ffe082;border:3px solid #121e34;color:#14243d;box-shadow:3px 3px #050d1c}
+.bt-core .warehousePanel .warehouseActions{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.bt-core .warehousePanel .warehouseActions button{width:auto;flex:1 1 auto}
+.bt-core .warehousePanel .teacherHowTo{background:#233958;color:#bfd3ed;border:0;padding:0}
+.bt-core .warehousePanel .preview{background:transparent;color:#bfd3ed;border:0;padding:5px 0}
+.bt-core .warehousePanel .stepHint{color:#bfd3ed}
+.bt-core .warehousePanel a{color:#8cdaff}
+@media(max-width:760px){.bt-core .warehouseCols{grid-template-columns:1fr}.bt-core .warehousePanel textarea{height:170px}.bt-core .warehousePanel .warehouseActions button{flex:1 1 100%}}
