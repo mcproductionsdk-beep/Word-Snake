@@ -41,11 +41,11 @@ export function mountTeacherMenu(root,services,options={}){
     try{
       const {id}=await services.sharing.saveSet(checked.value);
       if(signal.aborted)return;
-      const url=buildStudentUrl(options.previewGameUrl??location.href,id);
+      const url=new URL("/set/"+encodeURIComponent(id),"https://boringteacher.com").href;
       const link=el("a","",url);link.href=url;link.target="_blank";link.rel="noopener";
       const copy=button("COPY LINK","yellow");
       copy.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(url);copy.textContent="COPIED";}catch{copy.textContent="Select the link above to copy."; }},{signal});
-      shareStatus.replaceChildren(link,el("div","", " "),copy,el("div","", "Preview link: do not distribute as a permanent classroom URL."));
+      shareStatus.replaceChildren(link,el("div","", " "),copy);
     }catch(e){if(!signal.aborted)shareStatus.textContent=e.message??"Could not share vocabulary.";}
     finally{if(!signal.aborted)share.disabled=false;}
   },{signal});
