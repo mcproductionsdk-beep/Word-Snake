@@ -1,5 +1,5 @@
-import { validateSet } from "./vocabulary.js";
-import { isSupportedLocale } from "./languages.js";
+import { validateSet } from "./vocabulary.js?release=multilingual-20261023b";
+import { isSupportedLocale } from "./languages.js?release=multilingual-20261023b";
 const error = (code, message, cause) => Object.assign(new Error(message), { code, cause });
 function validId(id) { return typeof id === "string" && !!id.trim() && id.length <= 512; }
 export function buildStudentUrl(canonicalGameUrl, id) {
