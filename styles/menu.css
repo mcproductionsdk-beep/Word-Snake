@@ -58,3 +58,5 @@
 .bt-core .warehousePanel .stepHint{color:#bfd3ed}
 .bt-core .warehousePanel a{color:#8cdaff}
 @media(max-width:760px){.bt-core .warehouseCols{grid-template-columns:1fr}.bt-core .warehousePanel textarea{height:170px}.bt-core .warehousePanel .warehouseActions button{flex:1 1 100%}}
+
+.bt-core .studentGameGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px;margin:14px 0 20px}.bt-core .studentGameGrid[hidden]{display:none!important}.bt-core .studentGameTile{display:flex;flex-direction:column;align-items:center;gap:8px;text-decoration:none;text-align:center;padding:16px 10px;background:#233958;border:3px solid #7bbaf3;color:#fff;box-shadow:4px 4px #050b17}.bt-core .studentGameTile:hover,.bt-core .studentGameTile:focus-visible{border-color:#ffe082;background:#314e75}.bt-core .studentGameIcon{font-size:34px}.bt-core .studentGameName{font-size:13px;font-weight:700}
