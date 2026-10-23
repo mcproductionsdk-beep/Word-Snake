@@ -10,20 +10,19 @@ body{margin:0;background:#10192e;color:#f8f8ff;font-family:"Courier New",monospa
 </style></head>
 <body><main id="app"></main><iframe id="snakeFrame" title="Word Snake gameplay" src="./snake-game.html?release=core-20261020"></iframe>
 <script type="module">
-import { mountTeacherMenu,mountStudentMenu } from "./core/menu.js?release=vocabulary-naming-20261021";
+import { mountTeacherMenu,mountStudentMenu } from "./core/menu.js?release=multilingual-production-20261023";
 import { createSharingClient,readStudentSetId } from "./core/sharing.js";
 import { createVoiceService } from "./core/voice.js";
 import { WAREHOUSE_CATEGORIES } from "./core/warehouse-categories.js";
 import { LANGUAGE_OPTIONS,categoriesForPair } from "./core/multilingual-vocabulary-v2.js";
 const root=document.getElementById("app"),frame=document.getElementById("snakeFrame");
-const sharing=createSharingClient({apiBaseUrl:"https://boringteacher-vocabulary-api-staging.mcproductionsdk.workers.dev"});
+const sharing=createSharingClient({apiBaseUrl:"https://boringteacher-vocabulary-api.mcproductionsdk.workers.dev"});
 const voice=createVoiceService();let menu=null;
 const instructions="ARROW KEYS / WASD = steer · P = pause. Eat the correct target-language word. Wrong words cost a life. The snake wraps around the edges.";
-// Pilot source: unmerged central library on the Educational-Games development branch.
-// Replace with https://boringteacher.com/libraries/vocabulary/v1.json after approval and publication.
-const VOCABULARY_LIBRARY_URL="https://raw.githubusercontent.com/mcproductionsdk-beep/Educational-Games/dev/central-vocabulary-library-v1/libraries/vocabulary/v1.json";
+// Published central vocabulary library, shared across Boring Teacher games.
+const VOCABULARY_LIBRARY_URL="https://boringteacher.com/libraries/vocabulary/v1.json";
 const options={title:"WORD SNAKE",instructions,categories:WAREHOUSE_CATEGORIES,defaultCategory:"Animals",defaultText:"",defaultPromptLanguage:"en-US",defaultLanguage:"es-ES",previewGameUrl:location.href,onPlay:start};
-const V2_LIBRARY_URL="https://raw.githubusercontent.com/mcproductionsdk-beep/Educational-Games/dev/central-vocabulary-library-v1/libraries/vocabulary/v2-draft.json";
+const V2_LIBRARY_URL="https://boringteacher.com/libraries/vocabulary/v2.json";
 async function loadMultilingualVocabulary(){
  const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),4500);
  try{
