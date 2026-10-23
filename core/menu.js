@@ -68,6 +68,11 @@ export function mountStudentMenu(root,services,options={}){
   const clean=shell(root,options.title??"BORING TEACHER"),abort=new AbortController(),signal=abort.signal;
   const card=el("div","studentIntro"),heading=el("div","studentTitle","LOADING VOCABULARY"),meta=el("div","studentMeta","Please wait…"),play=button("PLAY","primary");
   play.disabled=true;add(card,heading,meta,play,details(options.instructions??"Select the correct translation."));root.append(card);
+  const games=[["🐍","Word Snake","/word-snake/"],["🏎️","Word Racer","/word-racer/"],["🏃","Word Jumper","/word-jumper/"],["👾","Word Invaders","/word-invaders/"],["🐸","Word Frog","/frog-river/"],["🔗","Word Match","/matching-columns/"],["🟡","Word Eater","/word-eater/"],["📦","Word Warehouse","/word-warehouse/"]];
+  const headingGames=el("h2","","CHOOSE A GAME"),grid=el("div","studentGameGrid");
+  for(const [icon,name,path] of games){const link=el("a","studentGameTile");link.href=new URL(path,location.origin).toString();link.target="_self";link.append(el("span","studentGameIcon",icon),el("span","studentGameName",name));grid.append(link);}
+  card.append(headingGames,grid);grid.hidden=true;
+  const updateGameLinks=id=>{for(const link of grid.querySelectorAll("a")){const url=new URL(link.href);url.hash="set="+encodeURIComponent(id);link.href=url.toString();}};
   let set=null;
   play.addEventListener("click",()=>{if(set)options.onPlay?.(set);},{signal});
   const id=readStudentSetId(options.studentUrl??location.href);
@@ -75,6 +80,6 @@ export function mountStudentMenu(root,services,options={}){
   recover.addEventListener("click",()=>options.onRecover?.(),{signal});
   function showRecovery(){if(!recover.isConnected)card.append(recover);}
   if(!id){heading.textContent="INVALID LINK";meta.textContent="This student link has no valid set ID.";showRecovery();}
-  else services.sharing.loadSet(id).then(value=>{if(signal.aborted)return;set=value;heading.textContent=value.title;meta.textContent=(value.promptLanguage??"en-US")+" → "+value.language+" · "+value.pairs.length+" words";play.disabled=false;}).catch(e=>{if(signal.aborted)return;heading.textContent="UNABLE TO LOAD";meta.textContent=e.message??"Could not load vocabulary.";showRecovery();});
+  else services.sharing.loadSet(id).then(value=>{if(signal.aborted)return;set=value;updateGameLinks(id);grid.hidden=false;heading.textContent=value.title;meta.textContent=(value.promptLanguage??"en-US")+" → "+value.language+" · "+value.pairs.length+" words";play.disabled=false;}).catch(e=>{if(signal.aborted)return;heading.textContent="UNABLE TO LOAD";meta.textContent=e.message??"Could not load vocabulary.";showRecovery();});
   return{destroy(){abort.abort();clean();}};
 }
