@@ -72,7 +72,7 @@ export function mountStudentMenu(root,services,options={}){
   const headingGames=el("h2","","CHOOSE A GAME"),grid=el("div","studentGameGrid");
   for(const [icon,name,path] of games){const link=el("a","studentGameTile");link.href=new URL(path,location.origin).toString();link.target="_self";link.append(el("span","studentGameIcon",icon),el("span","studentGameName",name));grid.append(link);}
   card.append(headingGames,grid);grid.hidden=true;
-  const updateGameLinks=id=>{for(const link of grid.querySelectorAll("a")){const url=new URL(link.href);url.hash="set="+encodeURIComponent(id);link.href=url.toString();}};
+  const updateGameLinks=id=>{for(const link of grid.querySelectorAll("a")){const url=new URL(link.href);url.hash="set="+encodeURIComponent(id);url.searchParams.set("autoplay","1");link.href=url.toString();}};
   let set=null;
   play.addEventListener("click",()=>{if(set)options.onPlay?.(set);},{signal});
   const id=readStudentSetId(options.studentUrl??location.href);
@@ -80,6 +80,6 @@ export function mountStudentMenu(root,services,options={}){
   recover.addEventListener("click",()=>options.onRecover?.(),{signal});
   function showRecovery(){if(!recover.isConnected)card.append(recover);}
   if(!id){heading.textContent="INVALID LINK";meta.textContent="This student link has no valid set ID.";showRecovery();}
-  else services.sharing.loadSet(id).then(value=>{if(signal.aborted)return;set=value;updateGameLinks(id);grid.hidden=false;heading.textContent=value.title;meta.textContent=(value.promptLanguage??"en-US")+" → "+value.language+" · "+value.pairs.length+" words";play.disabled=false;}).catch(e=>{if(signal.aborted)return;heading.textContent="UNABLE TO LOAD";meta.textContent=e.message??"Could not load vocabulary.";showRecovery();});
+  else services.sharing.loadSet(id).then(value=>{if(signal.aborted)return;set=value;updateGameLinks(id);grid.hidden=false;heading.textContent=value.title;meta.textContent=(value.promptLanguage??"en-US")+" → "+value.language+" · "+value.pairs.length+" words";play.disabled=false;if(new URL(location.href).searchParams.get("autoplay")==="1"){const u=new URL(location.href);u.searchParams.delete("autoplay");history.replaceState(null,"",u);options.onPlay?.(value);}}).catch(e=>{if(signal.aborted)return;heading.textContent="UNABLE TO LOAD";meta.textContent=e.message??"Could not load vocabulary.";showRecovery();});
   return{destroy(){abort.abort();clean();}};
 }
