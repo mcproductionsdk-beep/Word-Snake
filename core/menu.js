@@ -50,7 +50,7 @@ export function mountTeacherMenu(root,services,options={}){
   share.addEventListener("click",async()=>{
     const {parsed,checked}=current();
     if(parsed.rejectedLines.length||!checked.ok){error.textContent=parsed.rejectedLines.length?"Correct invalid vocabulary lines.":checked.error.message;return;}
-    if(promptLang.value!=="en-US"){error.textContent="Sharing non-English prompts requires a sharing-service update. This combination is playable locally, but sharing is temporarily disabled.";return;}
+    if(promptLang.value!=="en-US"||["fr-FR","it-IT"].includes(lang.value)){error.textContent="Sharing this language combination requires a sharing-service update. It is playable locally, but sharing is temporarily disabled.";return;}
     error.textContent="";share.disabled=true;shareStatus.textContent="Saving vocabulary…";
     try{
       const {id}=await services.sharing.saveSet(checked.value);
