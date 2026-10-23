@@ -11,8 +11,8 @@ body{margin:0;background:#10192e;color:#f8f8ff;font-family:"Courier New",monospa
 <body><main id="app"></main><iframe id="snakeFrame" title="Word Snake gameplay" src="./snake-game.html?release=core-20261020"></iframe>
 <script type="module">
 import { mountTeacherMenu,mountStudentMenu } from "./core/menu.js?release=multilingual-production-20261023";
-import { createSharingClient,readStudentSetId } from "./core/sharing.js";
-import { createVoiceService } from "./core/voice.js";
+import { createSharingClient,readStudentSetId } from "./core/sharing.js?release=multilingual-20261023b";
+import { createVoiceService } from "./core/voice.js?release=multilingual-20261023b";
 import { WAREHOUSE_CATEGORIES } from "./core/warehouse-categories.js";
 import { LANGUAGE_OPTIONS,categoriesForPair } from "./core/multilingual-vocabulary-v2.js";
 const root=document.getElementById("app"),frame=document.getElementById("snakeFrame");
