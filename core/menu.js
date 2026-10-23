@@ -50,12 +50,11 @@ export function mountTeacherMenu(root,services,options={}){
   share.addEventListener("click",async()=>{
     const {parsed,checked}=current();
     if(parsed.rejectedLines.length||!checked.ok){error.textContent=parsed.rejectedLines.length?"Correct invalid vocabulary lines.":checked.error.message;return;}
-    if(promptLang.value!=="en-US"||["fr-FR","it-IT"].includes(lang.value)){error.textContent="Sharing this language combination requires a sharing-service update. It is playable locally, but sharing is temporarily disabled.";return;}
     error.textContent="";share.disabled=true;shareStatus.textContent="Saving vocabulary…";
     try{
       const {id}=await services.sharing.saveSet(checked.value);
       if(signal.aborted)return;
-      const url=new URL("/set/"+encodeURIComponent(id),"https://boringteacher.com").href;
+      const url=buildStudentUrl(options.previewGameUrl??location.href,id);
       const link=el("a","",url);link.href=url;link.target="_blank";link.rel="noopener";
       const copy=button("COPY LINK","yellow");
       copy.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(url);copy.textContent="COPIED";}catch{copy.textContent="Select the link above to copy."; }},{signal});
