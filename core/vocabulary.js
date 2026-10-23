@@ -24,5 +24,7 @@ export function validateSet(set, { minPairs = 5 } = {}) {
   if (!set.pairs.every(p => Array.isArray(p) && p.length === 2 && p.every(v => typeof v === "string" && v.trim()))) {
     return fail("Each pair must contain two nonempty text values.");
   }
-  return { ok: true, value: { title: set.title.trim(), language: set.language.trim(), pairs: set.pairs.map(p => p.map(v => v.trim())) } };
+  const promptLanguage=typeof set.promptLanguage==="string"&&set.promptLanguage.trim()?set.promptLanguage.trim():"en-US";
+  if(promptLanguage===set.language.trim())return fail("Prompt and target languages must differ.");
+  return { ok: true, value: { title: set.title.trim(), language: set.language.trim(), promptLanguage, pairs: set.pairs.map(p => p.map(v => v.trim())) } };
 }
