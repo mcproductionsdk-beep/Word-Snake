@@ -16,7 +16,7 @@ import { createVoiceService } from "./core/voice.js";
 import { WAREHOUSE_CATEGORIES } from "./core/warehouse-categories.js";
 import { LANGUAGE_OPTIONS,categoriesForPair } from "./core/multilingual-vocabulary-v2.js";
 const root=document.getElementById("app"),frame=document.getElementById("snakeFrame");
-const sharing=createSharingClient({apiBaseUrl:"https://boringteacher-vocabulary-api.mcproductionsdk.workers.dev"});
+const sharing=createSharingClient({apiBaseUrl:"https://boringteacher-vocabulary-api-staging.mcproductionsdk.workers.dev"});
 const voice=createVoiceService();let menu=null;
 const instructions="ARROW KEYS / WASD = steer · P = pause. Eat the correct target-language word. Wrong words cost a life. The snake wraps around the edges.";
 // Pilot source: unmerged central library on the Educational-Games development branch.
