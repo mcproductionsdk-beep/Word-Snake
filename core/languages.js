@@ -3,7 +3,9 @@ const LANGUAGES = Object.freeze([
   { locale: "es-ES", label: "Spanish" },
   { locale: "de-DE", label: "German" },
   { locale: "da-DK", label: "Danish" },
-  { locale: "en-US", label: "English" }
+  { locale: "en-US", label: "English" },
+  { locale: "fr-FR", label: "French" },
+  { locale: "it-IT", label: "Italian" }
 ]);
 export function normalizeLocale(value) {
   const raw = String(value ?? "").trim().replace(/_/g, "-");
