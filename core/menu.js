@@ -1,6 +1,6 @@
-import { parsePairs, swapPairs, validateSet } from "./vocabulary.js";
-import { getSupportedLanguages } from "./languages.js";
-import { buildStudentUrl, readStudentSetId } from "./sharing.js";
+import { parsePairs, swapPairs, validateSet } from "./vocabulary.js?release=multilingual-20261023b";
+import { getSupportedLanguages } from "./languages.js?release=multilingual-20261023b";
+import { buildStudentUrl, readStudentSetId } from "./sharing.js?release=multilingual-20261023b";
 const el=(tag,cls,text)=>{const node=document.createElement(tag);if(cls)node.className=cls;if(text!==undefined)node.textContent=text;return node;};
 const add=(parent,...children)=>{parent.append(...children);return parent;};
 const button=(text,cls="")=>{const b=el("button",cls,text);b.type="button";return b;};
