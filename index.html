@@ -89,7 +89,7 @@ window.addEventListener("message",e=>{
  if(e.data?.type==="BT_SNAKE_READY"){snakeReady=true;deliverSnake();}
  if(e.data?.type==="BT_SNAKE_SPEAK"&&typeof e.data.text==="string"&&e.data.text.length<=250&&["es-ES","de-DE","da-DK","en-US","fr-FR","it-IT"].includes(e.data.language)){void voice.speak(e.data.text,e.data.language);}
  if(e.data?.type==="BT_SNAKE_CANCEL_SPEECH")voice.cancel();
- if(e.data?.type==="BT_SNAKE_MENU"){history.replaceState(null,"",location.pathname+location.search);showMenu(true);}
+ if(e.data?.type==="BT_SNAKE_MENU"){if(new URLSearchParams(location.search).get("returnTo")==="dashboard"){location.assign("https://boringteacher.com/dev/word-games/");}else{history.replaceState(null,"",location.pathname+location.search);showMenu(true);}}
  if(e.data?.type==="BT_SNAKE_START_FAILED"){document.documentElement.classList.remove("bt-autoplay-pending");frame.classList.remove("playing");root.hidden=false;root.style.removeProperty('display');root.textContent="Word Snake could not start. Please refresh and try again.";}
 });
 frame.addEventListener("load",()=>{snakeReady=false;frame.contentWindow?.postMessage({type:"BT_SNAKE_PING"},location.origin);});
