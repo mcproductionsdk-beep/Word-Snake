@@ -118,7 +118,7 @@ function ensureCorrectFood(){
  /* Free room for the required correct answer before any distractor. */
  while(!addFood(current)&&foods.length)foods.pop();
 }
-function start(pairs,locale){if(!Array.isArray(pairs)||pairs.length<5)return false;lang=locale;vocab=pairs.map(function(p,i){return{id:i,target:p[0],prompt:p[1]}});score=0;lives=3;round=1;done=0;misses={};step=.18;snake=[{x:15,y:10},{x:14,y:10},{x:13,y:10},{x:12,y:10}];dir={x:1,y:0};nextDir={x:1,y:0};foods=[];invincible=0;running=true;paused=false;last=0;acc=0;build();current=queue.shift();hud();game.classList.add("active");E("gameOver").classList.remove("show");resize();fillFoods();cancelAnimationFrame(raf);raf=requestAnimationFrame(loop);return true;}
+function start(pairs,locale){if(!Array.isArray(pairs)||pairs.length<5)return false;lang=locale;vocab=pairs.map(function(p,i){return{id:i,target:p[1],prompt:p[0]}});score=0;lives=3;round=1;done=0;misses={};step=.18;snake=[{x:15,y:10},{x:14,y:10},{x:13,y:10},{x:12,y:10}];dir={x:1,y:0};nextDir={x:1,y:0};foods=[];invincible=0;running=true;paused=false;last=0;acc=0;build();current=queue.shift();hud();game.classList.add("active");E("gameOver").classList.remove("show");resize();fillFoods();cancelAnimationFrame(raf);raf=requestAnimationFrame(loop);return true;}
 function resetPosition(){snake=[{x:15,y:10},{x:14,y:10},{x:13,y:10},{x:12,y:10}];dir={x:1,y:0};nextDir={x:1,y:0};invincible=1}
 function hurt(t){if(invincible>0)return;lives--;invincible=1;bad();flash(t,0);hud();if(lives<=0){running=false;E("gameOver").classList.add("show")}else resetPosition()}
 function move(){
