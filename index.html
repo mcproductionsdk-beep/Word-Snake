@@ -1,16 +1,18 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Word Snake — Boring Teacher</title>
+<script>if(new URLSearchParams(location.search).get("autoplay")==="1"&&location.hash.startsWith("#set="))document.documentElement.classList.add("bt-autoplay-pending");</script>
 <link rel="stylesheet" href="./styles/menu.css?release=student-arcade-autoplay-20261023v2">
 <style>
 body{margin:0;background:#10192e;color:#f8f8ff;font-family:"Courier New",monospace}
 #snakeFrame{display:none;width:100%;height:calc(100dvh - 12px);min-height:600px;border:0;background:#16264e}
 #snakeFrame.playing{display:block}
 #app{max-width:1100px;margin:8px auto}#app[hidden]{display:none!important}
+.bt-autoplay-pending #app{visibility:hidden}
 </style></head>
 <body><main id="app"></main><iframe id="snakeFrame" title="Word Snake gameplay" src="./snake-game.html?release=core-20261020"></iframe>
 <script type="module">
-import { mountTeacherMenu,mountStudentMenu } from "./core/menu.js?release=student-arcade-grid-20261023v1";
+import { mountTeacherMenu,mountStudentMenu } from "./core/menu.js?release=snake-autoplay-no-flash-20261027";
 import { createSharingClient,readStudentSetId } from "./core/sharing.js?release=multilingual-20261023b";
 import { createVoiceService } from "./core/voice.js?release=multilingual-20261023b";
 import { WAREHOUSE_CATEGORIES } from "./core/warehouse-categories.js";
@@ -70,6 +72,7 @@ function deliverSnake(){
  pendingVocabulary=null;
 }
 function start(vocabulary){
+ document.documentElement.classList.remove("bt-autoplay-pending");
  pendingVocabulary=vocabulary;
  menu?.destroy();menu=null;root.hidden=true;root.style.setProperty('display','none','important');frame.classList.add("playing");
  deliverSnake();
@@ -87,7 +90,7 @@ window.addEventListener("message",e=>{
  if(e.data?.type==="BT_SNAKE_SPEAK"&&typeof e.data.text==="string"&&e.data.text.length<=250&&["es-ES","de-DE","da-DK","en-US","fr-FR","it-IT"].includes(e.data.language)){void voice.speak(e.data.text,e.data.language);}
  if(e.data?.type==="BT_SNAKE_CANCEL_SPEECH")voice.cancel();
  if(e.data?.type==="BT_SNAKE_MENU"){history.replaceState(null,"",location.pathname+location.search);showMenu(true);}
- if(e.data?.type==="BT_SNAKE_START_FAILED"){frame.classList.remove("playing");root.hidden=false;root.style.removeProperty('display');root.textContent="Word Snake could not start. Please refresh and try again.";}
+ if(e.data?.type==="BT_SNAKE_START_FAILED"){document.documentElement.classList.remove("bt-autoplay-pending");frame.classList.remove("playing");root.hidden=false;root.style.removeProperty('display');root.textContent="Word Snake could not start. Please refresh and try again.";}
 });
 frame.addEventListener("load",()=>{snakeReady=false;frame.contentWindow?.postMessage({type:"BT_SNAKE_PING"},location.origin);});
 void loadBuiltInVocabulary().then(loadMultilingualVocabulary).finally(()=>showMenu());
