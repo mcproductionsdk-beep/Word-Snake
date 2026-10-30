@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en"><head><base href="../"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Word Snake — LAUNCHER PROTOTYPE (DEMO)</title>
+<script>if(new URLSearchParams(location.search).get("autoplay")==="1"&&location.hash.startsWith("#set="))document.documentElement.classList.add("bt-autoplay-pending");</script>
+<link rel="stylesheet" href="./styles/menu.css?release=student-arcade-autoplay-20261023v2">
+<style>
+body{margin:0;background:#10192e;color:#f8f8ff;font-family:"Courier New",monospace}
+#snakeFrame{display:none;width:100%;height:calc(100dvh - 12px);min-height:600px;border:0;background:#16264e}
+#snakeFrame.playing{display:block}
+#app{max-width:1100px;margin:8px auto}#app[hidden]{display:none!important}
+.bt-autoplay-pending #app{visibility:hidden}
+</style></head>
+<body><div style="position:fixed;top:4px;right:4px;z-index:9999;background:#ffdd57;color:#111;padding:5px 9px;font:900 11px monospace;pointer-events:none">LAUNCHER PROTOTYPE · DEMO</div><main id="app" role="status" aria-live="polite"></main><iframe id="snakeFrame" title="Word Snake gameplay" src="./mobile-release-candidate/snake-game.html?candidate=launcher-migration-v0.1"></iframe>
+<script type="module">
+import {createSharingClient,readStudentSetId} from "./core/sharing.js?release=multilingual-20261023b";
+import {createVoiceService} from "./core/voice.js?release=multilingual-20261023b";
+const HOME="https://boringteacher.com/";
+const root=document.getElementById("app"),frame=document.getElementById("snakeFrame");
+const sharing=createSharingClient({apiBaseUrl:"https://boringteacher-vocabulary-api.mcproductionsdk.workers.dev"});
+const voice=createVoiceService();
+const id=readStudentSetId(location.href);
+let ready=false,pending=null,started=false,timeout=null;
+const home=()=>location.assign(HOME);
+function fail(message){
+ clearTimeout(timeout);pending=null;frame.classList.remove("playing");root.hidden=false;root.style.removeProperty("display");document.documentElement.classList.remove("bt-autoplay-pending");
+ root.replaceChildren();
+ const card=document.createElement("section");card.style.cssText="max-width:600px;margin:12vh auto;padding:24px;border:3px solid #7bbaf3;background:#233958;color:#fff;font:700 17px/1.6 'Courier New',monospace";
+ const title=document.createElement("h1");title.textContent="WORD SNAKE · UNABLE TO START";
+ const info=document.createElement("p");info.textContent=message;
+ const link=document.createElement("a");link.href=HOME;link.textContent="RETURN TO WORD GAMES";link.style.cssText="color:#ffe082;font-weight:900";
+ card.append(title,info,link);root.append(card);
+}
+function deliver(){if(!ready||!pending)return;frame.contentWindow?.postMessage({type:"BT_SNAKE_START",vocabulary:pending},location.origin);pending=null;}
+function begin(set){
+ pending=set;root.hidden=true;root.style.setProperty("display","none","important");frame.classList.add("playing");document.documentElement.classList.remove("bt-autoplay-pending");
+ timeout=setTimeout(()=>{if(!started)fail("Game startup timed out. Return to Word Games and try again.");},12000);
+ deliver();frame.contentWindow?.postMessage({type:"BT_SNAKE_PING"},location.origin);
+}
+window.addEventListener("message",event=>{
+ if(event.origin!==location.origin||event.source!==frame.contentWindow)return;
+ const data=event.data||{};
+ if(data.type==="BT_SNAKE_READY"){ready=true;deliver();}
+ if(data.type==="BT_SNAKE_STARTED"){started=true;clearTimeout(timeout);frame.focus();}
+ if(data.type==="BT_SNAKE_START_FAILED"){fail("The game rejected this vocabulary set. Return to Word Games and try again.");}
+ if(data.type==="BT_SNAKE_SPEAK"&&typeof data.text==="string"&&data.text.length<=250&&["es-ES","de-DE","da-DK","en-US","fr-FR","it-IT"].includes(data.language))void voice.speak(data.text,data.language);
+ if(data.type==="BT_SNAKE_CANCEL_SPEECH")voice.cancel();
+ if(data.type==="BT_SNAKE_MENU"){voice.cancel();home();}
+});
+frame.addEventListener("load",()=>{ready=false;frame.contentWindow?.postMessage({type:"BT_SNAKE_PING"},location.origin);});
+if(!id){begin({title:"WORD SNAKE · DEMO",language:"es-ES",promptLanguage:"en-US",pairs:[["gato","cat"],["perro","dog"],["pájaro","bird"],["caballo","horse"],["pez","fish"],["vaca","cow"],["cerdo","pig"],["oveja","sheep"],["ratón","mouse"],["conejo","rabbit"],["oso","bear"],["león","lion"]]});}
+else{root.textContent="Loading Word Snake vocabulary…";sharing.loadSet(id).then(begin).catch(error=>fail(error?.message||"Unable to load shared vocabulary."));}
+</script></body></html>
