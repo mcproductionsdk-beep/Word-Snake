@@ -19,6 +19,8 @@ const root=document.getElementById("app"),frame=document.getElementById("snakeFr
 const sharing=createSharingClient({apiBaseUrl:"https://boringteacher-vocabulary-api.mcproductionsdk.workers.dev"});
 const voice=createVoiceService();
 const id=readStudentSetId(location.href);
+const demo=new URLSearchParams(location.search).get("demo")==="1";
+const demoSet={title:"Word Snake · Launcher Migration Demo",promptLanguage:"en-US",language:"es-ES",pairs:[["gato","cat"],["perro","dog"],["pájaro","bird"],["pez","fish"],["caballo","horse"],["vaca","cow"],["oveja","sheep"],["ratón","mouse"],["conejo","rabbit"],["pato","duck"]]};
 let ready=false,pending=null,started=false,timeout=null;
 const home=()=>location.assign(HOME);
 function fail(message){
@@ -47,6 +49,9 @@ window.addEventListener("message",event=>{
  if(data.type==="BT_SNAKE_MENU"){voice.cancel();home();}
 });
 frame.addEventListener("load",()=>{ready=false;frame.contentWindow?.postMessage({type:"BT_SNAKE_PING"},location.origin);});
-if(!id){home();}
+if(demo){
+ const ribbon=document.createElement("div");ribbon.textContent="MIGRATION CANDIDATE · DEMO SET";ribbon.style.cssText="position:fixed;z-index:99999;top:0;left:0;right:0;text-align:center;background:#ffe082;color:#10192e;font:700 12px/24px monospace;pointer-events:none";document.body.append(ribbon);
+ begin(demoSet);
+}else if(!id){home();}
 else{root.textContent="Loading Word Snake vocabulary…";sharing.loadSet(id).then(begin).catch(error=>fail(error?.message||"Unable to load shared vocabulary."));}
 </script></body></html>
