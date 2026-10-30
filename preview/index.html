@@ -63,7 +63,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
       <label for="words">Paste pairs: prompt first, answer second (TAB, pipe, semicolon, or spaced dash)</label>
       <textarea id="words" spellcheck="false" placeholder="cat&#9;gato&#10;dog&#9;perro&#10;bird&#9;pájaro&#10;fish&#9;pez&#10;cow&#9;vaca"></textarea>
     </div>
-    <p class="note">For example: English <strong>cat</strong> → Spanish <strong>gato</strong>. Enter at least 5 pairs. Changing a built-in topic replaces the vocabulary field.</p>
+    <p class="note">For example: English <strong>cat</strong> → Spanish <strong>gato</strong>. Enter at least 5 pairs. Built-in topics use the central 96-concept multilingual vocabulary library. French and Italian translations remain editorial candidates.</p>
     <div id="preview" aria-live="polite"></div>
     <div class="actions">
       <button type="button" id="play" class="primary">▶ PLAY TEST</button>
@@ -75,8 +75,9 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 </main>
 <iframe id="gameFrame" title="Word Snake experimental gameplay" src="../snake-game.html?preview=test-menu-v1"></iframe>
 <script type="module">
-import {WAREHOUSE_CATEGORIES} from "../core/warehouse-categories.js";
+
 import {getSupportedLanguages} from "../core/languages.js";
+import {categoriesForPair} from "../core/multilingual-vocabulary-v2.js?release=preview-language-pairs-20261030a";
 import {validateSet} from "../core/vocabulary.js";
 import {createSharingClient} from "../core/sharing.js";
 import {createVoiceService} from "../core/voice.js";
@@ -93,7 +94,10 @@ const voice=createVoiceService();
 const sharing=createSharingClient({apiBaseUrl:"https://boringteacher-vocabulary-api.mcproductionsdk.workers.dev"});
 const KEY="bt-word-snake-preview-editor-v1";
 const available=getSupportedLanguages();
-
+const languageName=locale=>available.find(item=>item.locale===locale)?.label||locale;
+let library=null,ready=false,pending=null,playing=false;
+let staleCustom=false,previousLanguages={prompt:"en-US",target:"es-ES"};
+play.disabled=true;save.disabled=true;category.disabled=true;
 for(const item of available){
   for(const select of [prompt,target]){
     const option=document.createElement("option");
@@ -101,7 +105,7 @@ for(const item of available){
   }
 }
 prompt.value="en-US";target.value="es-ES";
-let ready=false,pending=null,playing=false;
+
 function setStatus(text,bad=false,good=false){
   status.textContent=text;
   status.className="status"+(bad?" bad":good?" good":"");
@@ -122,10 +126,12 @@ function parse(text){
 }
 function refresh(){
   const parsed=parse(words.value);
-  preview.textContent=parsed.pairs.length+" vocabulary pairs"+(parsed.rejected.length?" · Invalid lines: "+parsed.rejected.join(", "):"")+
-   (parsed.pairs.length?"\nExample: FIND "+parsed.pairs[0][0]+" → "+parsed.pairs[0][1]:"");
-  if(parsed.rejected.length)preview.style.color="#ffbdc8";
-  else preview.style.color="#e2f3ff";
+  const pair=languageName(prompt.value)+" → "+languageName(target.value);
+  preview.textContent=pair+" · "+parsed.pairs.length+" vocabulary pairs"+
+    (parsed.rejected.length?" · Invalid lines: "+parsed.rejected.join(", "):"")+
+    (parsed.pairs.length?"\nExample: FIND "+parsed.pairs[0][0]+" → "+parsed.pairs[0][1]:"")+
+    (staleCustom?"\nCustom vocabulary must be reviewed after changing languages.":"");
+  preview.style.color=(parsed.rejected.length||staleCustom)?"#ffbdc8":"#e2f3ff";
 }
 function saveDraft(){
   try{sessionStorage.setItem(KEY,JSON.stringify({
@@ -133,27 +139,38 @@ function saveDraft(){
     title:title.value,words:words.value
   }));}catch{}
 }
-function buildCategories(prefer){
-  const original=category.value;
+function categories(){
+  if(!library)return {};
+  return categoriesForPair(library,prompt.value,target.value);
+}
+function buildCategories(prefer=""){
+  const availableCategories=categories();
   category.replaceChildren();
-  const custom=document.createElement("option");custom.value="";custom.textContent="Custom vocabulary";category.append(custom);
-  const builtin=prompt.value==="en-US"?(WAREHOUSE_CATEGORIES[target.value]||{}):{};
-  for(const name of Object.keys(builtin)){
-    const option=document.createElement("option");option.value=name;option.textContent=name;category.append(option);
+  const custom=document.createElement("option");
+  custom.value="";custom.textContent="Custom vocabulary";category.append(custom);
+  for(const name of Object.keys(availableCategories)){
+    const option=document.createElement("option");
+    option.value=name;option.textContent=name;category.append(option);
   }
-  category.value=prefer!==undefined?prefer:original;
-  if(!category.value||!builtin[category.value])category.value="";
-  return builtin;
+  category.value=Object.hasOwn(availableCategories,prefer)?prefer:"";
+  return availableCategories;
 }
 function loadTopic(){
-  const builtin=buildCategories(category.value);
-  const pairs=builtin[category.value];
-  if(!pairs)return;
-  words.value=pairs.map(row=>row[1]+"\t"+row[0]).join("\n");
-  title.value=category.value+" — Word Snake";
+  const topic=category.value;
+  if(!topic)return;
+  const selected=categories()[topic];
+  if(!selected||selected.length<5){
+    setStatus("This topic has no valid words for the selected language direction.",true);
+    return;
+  }
+  words.value=selected.map(([source,translation])=>source+"\t"+translation).join("\n");
+  title.value=topic+" — Word Snake";
+  staleCustom=false;
   refresh();saveDraft();
+  setStatus("Loaded "+selected.length+" "+topic+" pairs: "+languageName(prompt.value)+" → "+languageName(target.value)+".",false,true);
 }
 function currentSet(){
+  if(staleCustom)throw new Error("The languages changed after this custom vocabulary was entered. Check and edit your pairs for the selected languages first.");
   const parsed=parse(words.value);
   if(parsed.rejected.length)throw new Error("Correct malformed vocabulary lines: "+parsed.rejected.join(", ")+".");
   const checked=validateSet({
@@ -182,25 +199,36 @@ function showMenu(){
   setStatus("Returned from the game. Your vocabulary is ready to play again.",false,true);
   refresh();window.scrollTo(0,0);
 }
-for(const select of [prompt,target]){
-  select.addEventListener("change",()=>{
-    if(prompt.value===target.value){
-      const alternative=available.find(item=>item.locale!==prompt.value);
-      if(select===prompt)target.value=alternative.locale;
-      else prompt.value=alternative.locale;
-    }
-    const previous=category.value;
-    const cats=buildCategories(previous);
-    if(previous&&cats[previous])loadTopic();
-    else{category.value="";refresh();saveDraft();}
-  });
+function onLanguageChange(changed){
+  // If the user selects identical languages, swap the other field to the
+  // previous value instead of silently choosing an unrelated third language.
+  if(prompt.value===target.value){
+    if(changed===prompt)target.value=previousLanguages.prompt;
+    else prompt.value=previousLanguages.target;
+  }
+  previousLanguages={prompt:prompt.value,target:target.value};
+  const previousTopic=category.value;
+  const builtin=buildCategories(previousTopic);
+  if(previousTopic&&builtin[previousTopic]){
+    loadTopic();
+  }else{
+    category.value="";
+    staleCustom=!!words.value.trim();
+    refresh();saveDraft();
+    if(staleCustom)setStatus("Language changed. Custom words do not translate automatically. Review and edit the pairs before playing.",true);
+  }
 }
+for(const selector of [prompt,target])selector.addEventListener("change",()=>onLanguageChange(selector));
 category.addEventListener("change",()=>{
   if(category.value)loadTopic();
-  else{saveDraft();refresh();}
+  else{
+    staleCustom=false;saveDraft();refresh();
+    setStatus("Custom words are unchanged. Enter prompt → answer pairs that match the chosen languages.");
+  }
 });
 words.addEventListener("input",()=>{
-  category.value="";refresh();saveDraft();
+  category.value="";staleCustom=false;refresh();saveDraft();
+  setStatus("Custom vocabulary updated. Check the languages and pair order.");
 });
 title.addEventListener("input",saveDraft);
 play.addEventListener("click",()=>{
@@ -233,19 +261,46 @@ window.addEventListener("message",event=>{
      available.some(item=>item.locale===data.language))void voice.speak(data.text,data.language);
   if(data.type==="BT_SNAKE_CANCEL_SPEECH")voice.cancel();
 });
-try{
-  const draft=JSON.parse(sessionStorage.getItem(KEY)||"null");
-  if(draft&&typeof draft==="object"){
-    prompt.value=draft.prompt||"en-US";target.value=draft.target||"es-ES";
-    buildCategories(draft.category||"");
-    title.value=draft.title||title.value;
-    words.value=draft.words||"";
-  }else{
-    buildCategories("Animals");
-    loadTopic();
+
+async function init(){
+  try{
+    const response=await fetch("./vocabulary-v2.json",{cache:"no-store"});
+    if(!response.ok)throw new Error("Vocabulary source returned HTTP "+response.status);
+    const data=await response.json();
+    if(data.schemaVersion!==2||!Array.isArray(data.concepts)||data.concepts.length!==96)
+      throw new Error("Unexpected vocabulary library version");
+    library=data;
+    let draft=null;
+    try{draft=JSON.parse(sessionStorage.getItem(KEY)||"null");}catch{}
+    if(draft&&typeof draft==="object"){
+      prompt.value=available.some(l=>l.locale===draft.prompt)?draft.prompt:"en-US";
+      target.value=available.some(l=>l.locale===draft.target)?draft.target:"es-ES";
+      if(prompt.value===target.value)target.value=prompt.value==="en-US"?"es-ES":"en-US";
+      previousLanguages={prompt:prompt.value,target:target.value};
+      const choices=buildCategories(draft.category||"");
+      if(draft.category&&choices[draft.category]){
+        loadTopic();
+        if(typeof draft.title==="string"&&draft.title.trim())title.value=draft.title;
+      }else{
+        category.value="";
+        words.value=typeof draft.words==="string"?draft.words:"";
+        if(typeof draft.title==="string")title.value=draft.title;
+      }
+    }else{
+      buildCategories("Animals");
+      loadTopic();
+    }
+    category.disabled=false;play.disabled=false;save.disabled=false;
+    refresh();saveDraft();
+  }catch(error){
+    category.replaceChildren(new Option("Custom vocabulary",""));
+    category.disabled=true;play.disabled=false;save.disabled=false;
+    setStatus("Built-in vocabulary unavailable: "+(error.message||"Unknown error")+". You can still paste custom pairs.",true);
+    refresh();
   }
-}catch{buildCategories("Animals");loadTopic();}
-refresh();send("BT_SNAKE_PING");
+}
+void init();
+send("BT_SNAKE_PING");
 }
 </script>
 </body>
