@@ -35,7 +35,7 @@ jobs:
           done
 
       - name: Run release invariant tests
-        run: node --test tests/static.test.mjs
+        run: node --test tests/*.test.mjs
 
       - name: Test real preview gameplay in headless Chrome
         shell: bash
