@@ -151,6 +151,84 @@ try {
   assert.match(await page.locator("#words").inputValue(),/cat\tgato/);
   console.log("PASS: preview vocabulary menu → game → same menu, preserving selections");
 
+  // Every menu language change must regenerate the actual vocabulary rather
+  // than merely relabeling the original English–Spanish pairs.
+  await page.locator("#language").selectOption("de-DE");
+  assert.match(await page.locator("#words").inputValue(),/cat\tKatze/);
+  assert.doesNotMatch(await page.locator("#words").inputValue(),/cat\tgato/);
+  assert.match(await page.locator("#preview").innerText(),/English → German/);
+  await page.locator("#play").click();
+  await testerGame.locator("#game.active").waitFor({timeout:15000});
+  assert.equal(await testerGame.locator("#language").inputValue(),"de-DE");
+  assert.match(await testerGame.locator("#target").innerText(),/^FIND:\s*(CAT|DOG|BIRD|FISH|HORSE|COW|PIG|SHEEP|MOUSE|RABBIT|DUCK|CHICKEN)$/);
+  await testerGame.locator("#mainMenu").click();
+  await page.locator("#menu:not([hidden])").waitFor();
+  console.log("PASS: English → German word pairs actually reach the game");
+
+  await page.locator("#promptLanguage").selectOption("es-ES");
+  assert.match(await page.locator("#words").inputValue(),/gato\tKatze/);
+  assert.match(await page.locator("#preview").innerText(),/Spanish → German/);
+  await page.locator("#play").click();
+  await testerGame.locator("#game.active").waitFor({timeout:15000});
+  assert.equal(await testerGame.locator("#language").inputValue(),"de-DE");
+  assert.match(await testerGame.locator("#target").innerText(),/^FIND:\s*(GATO|PERRO|PÁJARO|PEZ|CABALLO|VACA|CERDO|OVEJA|RATÓN|CONEJO|PATO|POLLO)$/);
+  await testerGame.locator("#mainMenu").click();
+  await page.locator("#menu:not([hidden])").waitFor();
+  console.log("PASS: Spanish → German uses source Spanish and German answers");
+
+  await page.locator("#language").selectOption("en-US");
+  assert.match(await page.locator("#words").inputValue(),/gato\tcat/);
+  await page.locator("#play").click();
+  await testerGame.locator("#game.active").waitFor({timeout:15000});
+  assert.equal(await testerGame.locator("#language").inputValue(),"en-US");
+  await testerGame.locator("#mainMenu").click();
+  await page.locator("#menu:not([hidden])").waitFor();
+  console.log("PASS: Spanish → English reverse direction works");
+
+  await page.locator("#promptLanguage").selectOption("fr-FR");
+  await page.locator("#language").selectOption("it-IT");
+  assert.match(await page.locator("#words").inputValue(),/chat\tgatto/);
+  assert.match(await page.locator("#preview").innerText(),/French → Italian/);
+  await page.locator("#play").click();
+  await testerGame.locator("#game.active").waitFor({timeout:15000});
+  assert.equal(await testerGame.locator("#language").inputValue(),"it-IT");
+  assert.match(await testerGame.locator("#target").innerText(),/^FIND:\s*(CHAT|CHIEN|OISEAU|POISSON|CHEVAL|VACHE|COCHON|MOUTON|SOURIS|LAPIN|CANARD|POULET)$/);
+  await testerGame.locator("#mainMenu").click();
+  await page.locator("#menu:not([hidden])").waitFor();
+  console.log("PASS: French → Italian pairs play with correct locales");
+
+  await page.locator("#promptLanguage").selectOption("en-US");
+  await page.locator("#language").selectOption("da-DK");
+  assert.match(await page.locator("#words").inputValue(),/cat\tkat/);
+  await page.locator("#play").click();
+  await testerGame.locator("#game.active").waitFor({timeout:15000});
+  assert.equal(await testerGame.locator("#language").inputValue(),"da-DK");
+  await testerGame.locator("#mainMenu").click();
+  await page.locator("#menu:not([hidden])").waitFor();
+  console.log("PASS: English → Danish uses Danish answers");
+
+  await page.locator("#words").fill("red\trød\nblue\tblå\ngreen\tgrøn\nyellow\tgul\nblack\tsort");
+  assert.equal(await page.locator("#category").inputValue(),"");
+  await page.locator("#language").selectOption("de-DE");
+  await page.locator("#play").click();
+  assert.match(await page.locator("#status").innerText(),/languages changed after this custom vocabulary/i);
+  assert.equal(await page.locator("#menu[hidden]").count(),0);
+  // Revising the custom pairs deliberately confirms the new language direction.
+  await page.locator("#words").fill("red\trot\nblue\tblau\ngreen\tgrün\nyellow\tgelb\nblack\tschwarz");
+  await page.locator("#play").click();
+  await testerGame.locator("#game.active").waitFor({timeout:15000});
+  assert.equal(await testerGame.locator("#language").inputValue(),"de-DE");
+  await testerGame.locator("#mainMenu").click();
+  await page.locator("#menu:not([hidden])").waitFor();
+  console.log("PASS: stale custom pairs are blocked until edited for the new language");
+
+  // Restore the original English → Spanish built-in set for sharing checks.
+  await page.locator("#promptLanguage").selectOption("en-US");
+  await page.locator("#language").selectOption("es-ES");
+  await page.locator("#category").selectOption("Animals");
+  assert.match(await page.locator("#words").inputValue(),/cat\tgato/);
+
+
   // Save and load through the real API contract (mocked here) and return to preview.
   await page.locator("#save").click();
   await page.waitForURL(base+"/?returnTo=preview#set="+id,{timeout:15000});
