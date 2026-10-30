@@ -41,6 +41,10 @@ const sharing=createSharingClient({apiBaseUrl:"https://boringteacher-vocabulary-
 const voice=createVoiceService();
 const params=new URLSearchParams(location.search);
 const id=readStudentSetId(location.href);
+const isPagesPreview=location.hostname.endsWith(".pages.dev");
+const previewReturn=params.get("returnTo")==="preview"&&(isPagesPreview||["localhost","127.0.0.1"].includes(location.hostname));
+const previewMenuUrl=new URL("./preview/",location.href);
+if(previewReturn)document.getElementById("home").href=previewMenuUrl.toString();
 let ready=false,started=false,pending=null,startTimer=null,finished=false;
 
 function error(text){
@@ -86,6 +90,7 @@ function returnHome(){
   finished=true;
   clearTimeout(startTimer);
   voice.cancel();
+  if(previewReturn){location.assign(previewMenuUrl.toString());return;}
   // Returning through browser history preserves whether the teacher was editing
   // on the homepage or the student was using its #set= launcher.
   try{
@@ -115,7 +120,8 @@ window.addEventListener("message",event=>{
 frame.addEventListener("load",()=>{ready=false;send("BT_SNAKE_PING");});
 window.addEventListener("pagehide",()=>{clearTimeout(startTimer);voice.cancel();});
 if(!id){
-  error(location.hash?"Invalid or missing vocabulary set ID. Open the link provided by your teacher.":"Select your vocabulary on the Boring Teacher homepage, then choose Word Snake.");
+  if(isPagesPreview&&!location.hash){location.replace(previewMenuUrl.toString());}
+  else error(location.hash?"Invalid or missing vocabulary set ID. Open the link provided by your teacher.":"Select your vocabulary on the Boring Teacher homepage, then choose Word Snake.");
 }else{
   message.textContent="Loading shared vocabulary…";
   sharing.loadSet(id).then(launch).catch(err=>
