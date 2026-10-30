@@ -33,7 +33,15 @@ await mkdir("tests/artifacts",{recursive:true});
 try {
   await page.route("https://boringteacher-vocabulary-api.mcproductionsdk.workers.dev/sets/**", async route=>{
     const req=route.request();
-    if(req.url().endsWith("/"+id)){
+    if(req.url().endsWith("/ci-html-prompt")){
+      const hostile='<img src=x onerror="window.__btInjected=1">';
+      await route.fulfill({
+        status:200, contentType:"application/json",
+        headers:{"access-control-allow-origin":"*"},
+        body:JSON.stringify({set:{title:"Shared text safety",language:"es-ES",promptLanguage:"en-US",pairs:
+          ["a","b","c","d","e","f"].map((x)=>[hostile,x])}}),
+      });
+    }else if(req.url().endsWith("/"+id)){
       await route.fulfill({
         status:200,
         contentType:"application/json",
@@ -247,6 +255,16 @@ try {
   await demoGame.locator("#mainMenu").click();
   await page.waitForURL(base+"/preview/",{timeout:15000});
   console.log("PASS: legacy demo's MAIN MENU returns to preview tester");
+
+
+  // Shared vocabulary is public user-supplied text, never executable markup.
+  await page.goto(base+"/?autoplay=1#set=ci-html-prompt");
+  const injectionGame=page.frameLocator("#snakeFrame");
+  await injectionGame.locator("#game.active").waitFor({timeout:15000});
+  assert.equal(await injectionGame.locator("#target img").count(),0,"Untrusted prompt must not create HTML elements");
+  assert.match(await injectionGame.locator("#target b").innerText(),/<IMG SRC=X ONERROR=/);
+  assert.equal(await injectionGame.locator("body").evaluate(()=>window.__btInjected===1),false);
+  console.log("PASS: shared vocabulary cannot inject executable markup into the prompt");
 
   assert.deepEqual(errors,[],"Page JavaScript errors: "+errors.join("; "));
   console.log("ALL WORD SNAKE LAUNCHER CHECKS PASSED");
