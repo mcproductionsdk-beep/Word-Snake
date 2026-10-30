@@ -68,8 +68,8 @@ test("real entry uses the promoted mobile engine with distinct language directio
   assert.match(html, /mobile-controls/);
   assert.match(html, /touchUp/);
   assert.match(html, /touchDown/);
-  assert.match(html, /#game \.mobile-controls\{order:3/);
-  assert.match(html, /#game \.wrap\{order:4/);
+  assert.match(html, /#game \.mobile-controls\{order:4/);
+  assert.match(html, /#game \.wrap\{order:3/);
   assert.match(html, /target:p\[1\],prompt:p\[0\]/);
   assert.match(html, /value="fr-FR"/);
   assert.match(html, /value="it-IT"/);
