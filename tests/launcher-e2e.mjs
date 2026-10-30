@@ -122,7 +122,20 @@ try {
 
   // The preview has its own teacher-only tester. It never appears in the actual game.
   await page.goto(base+"/preview/");
-  await page.waitForFunction(()=>document.querySelector("#promptLanguage")?.value==="en-US"&&document.querySelector("#category")?.value==="Animals",{},{timeout:12000});
+  try {
+    await page.waitForFunction(()=>document.querySelector("#promptLanguage")?.value==="en-US"&&document.querySelector("#category")?.value==="Animals",{},{timeout:12000});
+  }catch(err){
+    console.error("PREVIEW MENU DIAGNOSTIC",await page.evaluate(()=>({
+      url:location.href,host:location.hostname,
+      prompt:document.querySelector("#promptLanguage")?.value,
+      languages:document.querySelector("#promptLanguage")?.options.length,
+      category:document.querySelector("#category")?.value,
+      categories:document.querySelector("#category")?.options.length,
+      status:document.querySelector("#status")?.textContent,
+      body:document.body?.innerText.slice(0,220)
+    })),errors);
+    throw err;
+  }
   assert.equal(await page.locator("#promptLanguage").inputValue(),"en-US");
   assert.equal(await page.locator("#language").inputValue(),"es-ES");
   assert.equal(await page.locator("#category").inputValue(),"Animals");
