@@ -30,9 +30,9 @@ test("set-first launcher no longer mounts duplicate teacher or student menus", (
     assert.ok(html.includes(signal), `Missing launch protocol ${signal}`);
   }
   assert.match(html, /readStudentSetId/);
-  assert.match(html, /sharing\\.loadSet\\(id\\)/);
+  assert.match(html, /sharing\.loadSet\(id\)/);
   assert.match(html, /returnHome/);
-  assert.match(html, /snake-game\\.html/);
+  assert.match(html, /snake-game\.html/);
   assert.doesNotMatch(html, /mountTeacherMenu|mountStudentMenu/);
   assert.doesNotMatch(html, /id=["'](category|words|shareStudentLink)["']/);
 });
@@ -68,16 +68,16 @@ test("real entry uses the promoted mobile engine with distinct language directio
   assert.match(html, /mobile-controls/);
   assert.match(html, /touchUp/);
   assert.match(html, /touchDown/);
-  assert.match(html, /#game \\.mobile-controls\\{order:3/);
-  assert.match(html, /#game \\.wrap\\{order:4/);
-  assert.match(html, /target:p\\[1\\],prompt:p\\[0\\]/);
+  assert.match(html, /#game \.mobile-controls\{order:3/);
+  assert.match(html, /#game \.wrap\{order:4/);
+  assert.match(html, /target:p\[1\],prompt:p\[0\]/);
   assert.match(html, /value="fr-FR"/);
   assert.match(html, /value="it-IT"/);
-  assert.doesNotMatch(html, /if\\(expanded\\(\\)\\)/);
+  assert.doesNotMatch(html, /if\(expanded\(\)\)/);
 });
 
 test("demo fixture uses homepage [prompt,target] order", () => {
   const html=read("launcher-migration-candidate/index.html");
-  assert.match(html, /\\["cat","gato"\\]/);
-  assert.doesNotMatch(html, /\\["gato","cat"\\]/);
+  assert.match(html, /\["cat","gato"\]/);
+  assert.doesNotMatch(html, /\["gato","cat"\]/);
 });
