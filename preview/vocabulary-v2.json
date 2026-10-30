@@ -1,0 +1,1175 @@
+{
+  "schemaVersion": 2,
+  "status": "development-translation-review",
+  "description": "Concept-aligned V2 development library. Existing V1 translations retained, French and Italian candidate translations added for review before gameplay integration.",
+  "defaultPromptLanguage": "en",
+  "defaultTargetLanguage": "es-ES",
+  "supportedLanguages": [
+    "en",
+    "es-ES",
+    "de-DE",
+    "da-DK",
+    "fr-FR",
+    "it-IT"
+  ],
+  "plannedLanguages": [],
+  "languageSelection": {
+    "promptMustDifferFromTarget": true,
+    "teacherSetsLanguagesForSharedSets": true,
+    "independentLearnerMayChoose": true
+  },
+  "concepts": [
+    {
+      "id": "animals-cat",
+      "category": "Animals",
+      "translations": {
+        "en": "cat",
+        "es-ES": "gato",
+        "de-DE": "Katze",
+        "da-DK": "kat",
+        "fr-FR": "chat",
+        "it-IT": "gatto"
+      }
+    },
+    {
+      "id": "animals-dog",
+      "category": "Animals",
+      "translations": {
+        "en": "dog",
+        "es-ES": "perro",
+        "de-DE": "Hund",
+        "da-DK": "hund",
+        "fr-FR": "chien",
+        "it-IT": "cane"
+      }
+    },
+    {
+      "id": "animals-bird",
+      "category": "Animals",
+      "translations": {
+        "en": "bird",
+        "es-ES": "pájaro",
+        "de-DE": "Vogel",
+        "da-DK": "fugl",
+        "fr-FR": "oiseau",
+        "it-IT": "uccello"
+      }
+    },
+    {
+      "id": "animals-fish",
+      "category": "Animals",
+      "translations": {
+        "en": "fish",
+        "es-ES": "pez",
+        "de-DE": "Fisch",
+        "da-DK": "fisk",
+        "fr-FR": "poisson",
+        "it-IT": "pesce"
+      }
+    },
+    {
+      "id": "animals-horse",
+      "category": "Animals",
+      "translations": {
+        "en": "horse",
+        "es-ES": "caballo",
+        "de-DE": "Pferd",
+        "da-DK": "hest",
+        "fr-FR": "cheval",
+        "it-IT": "cavallo"
+      }
+    },
+    {
+      "id": "animals-cow",
+      "category": "Animals",
+      "translations": {
+        "en": "cow",
+        "es-ES": "vaca",
+        "de-DE": "Kuh",
+        "da-DK": "ko",
+        "fr-FR": "vache",
+        "it-IT": "mucca"
+      }
+    },
+    {
+      "id": "animals-pig",
+      "category": "Animals",
+      "translations": {
+        "en": "pig",
+        "es-ES": "cerdo",
+        "de-DE": "Schwein",
+        "da-DK": "gris",
+        "fr-FR": "cochon",
+        "it-IT": "maiale"
+      }
+    },
+    {
+      "id": "animals-sheep",
+      "category": "Animals",
+      "translations": {
+        "en": "sheep",
+        "es-ES": "oveja",
+        "de-DE": "Schaf",
+        "da-DK": "får",
+        "fr-FR": "mouton",
+        "it-IT": "pecora"
+      }
+    },
+    {
+      "id": "animals-mouse",
+      "category": "Animals",
+      "translations": {
+        "en": "mouse",
+        "es-ES": "ratón",
+        "de-DE": "Maus",
+        "da-DK": "mus",
+        "fr-FR": "souris",
+        "it-IT": "topo"
+      }
+    },
+    {
+      "id": "animals-rabbit",
+      "category": "Animals",
+      "translations": {
+        "en": "rabbit",
+        "es-ES": "conejo",
+        "de-DE": "Kaninchen",
+        "da-DK": "kanin",
+        "fr-FR": "lapin",
+        "it-IT": "coniglio"
+      }
+    },
+    {
+      "id": "animals-duck",
+      "category": "Animals",
+      "translations": {
+        "en": "duck",
+        "es-ES": "pato",
+        "de-DE": "Ente",
+        "da-DK": "and",
+        "fr-FR": "canard",
+        "it-IT": "anatra"
+      }
+    },
+    {
+      "id": "animals-chicken",
+      "category": "Animals",
+      "translations": {
+        "en": "chicken",
+        "es-ES": "pollo",
+        "de-DE": "Huhn",
+        "da-DK": "kylling",
+        "fr-FR": "poulet",
+        "it-IT": "pollo"
+      }
+    },
+    {
+      "id": "food-drink-bread",
+      "category": "Food & Drink",
+      "translations": {
+        "en": "bread",
+        "es-ES": "pan",
+        "de-DE": "Brot",
+        "da-DK": "brød",
+        "fr-FR": "pain",
+        "it-IT": "pane"
+      }
+    },
+    {
+      "id": "food-drink-water",
+      "category": "Food & Drink",
+      "translations": {
+        "en": "water",
+        "es-ES": "agua",
+        "de-DE": "Wasser",
+        "da-DK": "vand",
+        "fr-FR": "eau",
+        "it-IT": "acqua"
+      }
+    },
+    {
+      "id": "food-drink-milk",
+      "category": "Food & Drink",
+      "translations": {
+        "en": "milk",
+        "es-ES": "leche",
+        "de-DE": "Milch",
+        "da-DK": "mælk",
+        "fr-FR": "lait",
+        "it-IT": "latte"
+      }
+    },
+    {
+      "id": "food-drink-cheese",
+      "category": "Food & Drink",
+      "translations": {
+        "en": "cheese",
+        "es-ES": "queso",
+        "de-DE": "Käse",
+        "da-DK": "ost",
+        "fr-FR": "fromage",
+        "it-IT": "formaggio"
+      }
+    },
+    {
+      "id": "food-drink-apple",
+      "category": "Food & Drink",
+      "translations": {
+        "en": "apple",
+        "es-ES": "manzana",
+        "de-DE": "Apfel",
+        "da-DK": "æble",
+        "fr-FR": "pomme",
+        "it-IT": "mela"
+      }
+    },
+    {
+      "id": "food-drink-banana",
+      "category": "Food & Drink",
+      "translations": {
+        "en": "banana",
+        "es-ES": "plátano",
+        "de-DE": "Banane",
+        "da-DK": "banan",
+        "fr-FR": "banane",
+        "it-IT": "banana"
+      }
+    },
+    {
+      "id": "food-drink-egg",
+      "category": "Food & Drink",
+      "translations": {
+        "en": "egg",
+        "es-ES": "huevo",
+        "de-DE": "Ei",
+        "da-DK": "æg",
+        "fr-FR": "œuf",
+        "it-IT": "uovo"
+      }
+    },
+    {
+      "id": "food-drink-rice",
+      "category": "Food & Drink",
+      "translations": {
+        "en": "rice",
+        "es-ES": "arroz",
+        "de-DE": "Reis",
+        "da-DK": "ris",
+        "fr-FR": "riz",
+        "it-IT": "riso"
+      }
+    },
+    {
+      "id": "food-drink-potato",
+      "category": "Food & Drink",
+      "translations": {
+        "en": "potato",
+        "es-ES": "patata",
+        "de-DE": "Kartoffel",
+        "da-DK": "kartoffel",
+        "fr-FR": "pomme de terre",
+        "it-IT": "patata"
+      }
+    },
+    {
+      "id": "food-drink-carrot",
+      "category": "Food & Drink",
+      "translations": {
+        "en": "carrot",
+        "es-ES": "zanahoria",
+        "de-DE": "Karotte",
+        "da-DK": "gulerod",
+        "fr-FR": "carotte",
+        "it-IT": "carota"
+      }
+    },
+    {
+      "id": "food-drink-salt",
+      "category": "Food & Drink",
+      "translations": {
+        "en": "salt",
+        "es-ES": "sal",
+        "de-DE": "Salz",
+        "da-DK": "salt",
+        "fr-FR": "sel",
+        "it-IT": "sale"
+      }
+    },
+    {
+      "id": "food-drink-sugar",
+      "category": "Food & Drink",
+      "translations": {
+        "en": "sugar",
+        "es-ES": "azúcar",
+        "de-DE": "Zucker",
+        "da-DK": "sukker",
+        "fr-FR": "sucre",
+        "it-IT": "zucchero"
+      }
+    },
+    {
+      "id": "body-head",
+      "category": "Body",
+      "translations": {
+        "en": "head",
+        "es-ES": "cabeza",
+        "de-DE": "Kopf",
+        "da-DK": "hoved",
+        "fr-FR": "tête",
+        "it-IT": "testa"
+      }
+    },
+    {
+      "id": "body-hand",
+      "category": "Body",
+      "translations": {
+        "en": "hand",
+        "es-ES": "mano",
+        "de-DE": "Hand",
+        "da-DK": "hånd",
+        "fr-FR": "main",
+        "it-IT": "mano"
+      }
+    },
+    {
+      "id": "body-foot",
+      "category": "Body",
+      "translations": {
+        "en": "foot",
+        "es-ES": "pie",
+        "de-DE": "Fuß",
+        "da-DK": "fod",
+        "fr-FR": "pied",
+        "it-IT": "piede"
+      }
+    },
+    {
+      "id": "body-eye",
+      "category": "Body",
+      "translations": {
+        "en": "eye",
+        "es-ES": "ojo",
+        "de-DE": "Auge",
+        "da-DK": "øje",
+        "fr-FR": "œil",
+        "it-IT": "occhio"
+      }
+    },
+    {
+      "id": "body-ear",
+      "category": "Body",
+      "translations": {
+        "en": "ear",
+        "es-ES": "oreja",
+        "de-DE": "Ohr",
+        "da-DK": "øre",
+        "fr-FR": "oreille",
+        "it-IT": "orecchio"
+      }
+    },
+    {
+      "id": "body-nose",
+      "category": "Body",
+      "translations": {
+        "en": "nose",
+        "es-ES": "nariz",
+        "de-DE": "Nase",
+        "da-DK": "næse",
+        "fr-FR": "nez",
+        "it-IT": "naso"
+      }
+    },
+    {
+      "id": "body-mouth",
+      "category": "Body",
+      "translations": {
+        "en": "mouth",
+        "es-ES": "boca",
+        "de-DE": "Mund",
+        "da-DK": "mund",
+        "fr-FR": "bouche",
+        "it-IT": "bocca"
+      }
+    },
+    {
+      "id": "body-arm",
+      "category": "Body",
+      "translations": {
+        "en": "arm",
+        "es-ES": "brazo",
+        "de-DE": "Arm",
+        "da-DK": "arm",
+        "fr-FR": "bras",
+        "it-IT": "braccio"
+      }
+    },
+    {
+      "id": "body-leg",
+      "category": "Body",
+      "translations": {
+        "en": "leg",
+        "es-ES": "pierna",
+        "de-DE": "Bein",
+        "da-DK": "ben",
+        "fr-FR": "jambe",
+        "it-IT": "gamba"
+      }
+    },
+    {
+      "id": "body-finger",
+      "category": "Body",
+      "translations": {
+        "en": "finger",
+        "es-ES": "dedo",
+        "de-DE": "Finger",
+        "da-DK": "finger",
+        "fr-FR": "doigt",
+        "it-IT": "dito"
+      }
+    },
+    {
+      "id": "body-hair",
+      "category": "Body",
+      "translations": {
+        "en": "hair",
+        "es-ES": "pelo",
+        "de-DE": "Haar",
+        "da-DK": "hår",
+        "fr-FR": "cheveux",
+        "it-IT": "capelli"
+      }
+    },
+    {
+      "id": "body-tooth",
+      "category": "Body",
+      "translations": {
+        "en": "tooth",
+        "es-ES": "diente",
+        "de-DE": "Zahn",
+        "da-DK": "tand",
+        "fr-FR": "dent",
+        "it-IT": "dente"
+      }
+    },
+    {
+      "id": "school-school",
+      "category": "School",
+      "translations": {
+        "en": "school",
+        "es-ES": "escuela",
+        "de-DE": "Schule",
+        "da-DK": "skole",
+        "fr-FR": "école",
+        "it-IT": "scuola"
+      }
+    },
+    {
+      "id": "school-book",
+      "category": "School",
+      "translations": {
+        "en": "book",
+        "es-ES": "libro",
+        "de-DE": "Buch",
+        "da-DK": "bog",
+        "fr-FR": "livre",
+        "it-IT": "libro"
+      }
+    },
+    {
+      "id": "school-pencil",
+      "category": "School",
+      "translations": {
+        "en": "pencil",
+        "es-ES": "lápiz",
+        "de-DE": "Bleistift",
+        "da-DK": "blyant",
+        "fr-FR": "crayon",
+        "it-IT": "matita"
+      }
+    },
+    {
+      "id": "school-teacher",
+      "category": "School",
+      "translations": {
+        "en": "teacher",
+        "es-ES": "profesor",
+        "de-DE": "Lehrer",
+        "da-DK": "lærer",
+        "fr-FR": "professeur",
+        "it-IT": "insegnante"
+      }
+    },
+    {
+      "id": "school-student",
+      "category": "School",
+      "translations": {
+        "en": "student",
+        "es-ES": "estudiante",
+        "de-DE": "Schüler",
+        "da-DK": "elev",
+        "fr-FR": "élève",
+        "it-IT": "studente"
+      }
+    },
+    {
+      "id": "school-desk",
+      "category": "School",
+      "translations": {
+        "en": "desk",
+        "es-ES": "escritorio",
+        "de-DE": "Schreibtisch",
+        "da-DK": "skrivebord",
+        "fr-FR": "bureau",
+        "it-IT": "scrivania"
+      }
+    },
+    {
+      "id": "school-chair",
+      "category": "School",
+      "translations": {
+        "en": "chair",
+        "es-ES": "silla",
+        "de-DE": "Stuhl",
+        "da-DK": "stol",
+        "fr-FR": "chaise",
+        "it-IT": "sedia"
+      }
+    },
+    {
+      "id": "school-paper",
+      "category": "School",
+      "translations": {
+        "en": "paper",
+        "es-ES": "papel",
+        "de-DE": "Papier",
+        "da-DK": "papir",
+        "fr-FR": "papier",
+        "it-IT": "carta"
+      }
+    },
+    {
+      "id": "school-question",
+      "category": "School",
+      "translations": {
+        "en": "question",
+        "es-ES": "pregunta",
+        "de-DE": "Frage",
+        "da-DK": "spørgsmål",
+        "fr-FR": "question",
+        "it-IT": "domanda"
+      }
+    },
+    {
+      "id": "school-answer",
+      "category": "School",
+      "translations": {
+        "en": "answer",
+        "es-ES": "respuesta",
+        "de-DE": "Antwort",
+        "da-DK": "svar",
+        "fr-FR": "réponse",
+        "it-IT": "risposta"
+      }
+    },
+    {
+      "id": "school-lesson",
+      "category": "School",
+      "translations": {
+        "en": "lesson",
+        "es-ES": "lección",
+        "de-DE": "Unterrichtsstunde",
+        "da-DK": "lektion",
+        "fr-FR": "leçon",
+        "it-IT": "lezione"
+      }
+    },
+    {
+      "id": "school-homework",
+      "category": "School",
+      "translations": {
+        "en": "homework",
+        "es-ES": "deberes",
+        "de-DE": "Hausaufgaben",
+        "da-DK": "lektier",
+        "fr-FR": "devoirs",
+        "it-IT": "compiti"
+      }
+    },
+    {
+      "id": "home-house",
+      "category": "Home",
+      "translations": {
+        "en": "house",
+        "es-ES": "casa",
+        "de-DE": "Haus",
+        "da-DK": "hus",
+        "fr-FR": "maison",
+        "it-IT": "casa"
+      }
+    },
+    {
+      "id": "home-door",
+      "category": "Home",
+      "translations": {
+        "en": "door",
+        "es-ES": "puerta",
+        "de-DE": "Tür",
+        "da-DK": "dør",
+        "fr-FR": "porte",
+        "it-IT": "porta"
+      }
+    },
+    {
+      "id": "home-window",
+      "category": "Home",
+      "translations": {
+        "en": "window",
+        "es-ES": "ventana",
+        "de-DE": "Fenster",
+        "da-DK": "vindue",
+        "fr-FR": "fenêtre",
+        "it-IT": "finestra"
+      }
+    },
+    {
+      "id": "home-table",
+      "category": "Home",
+      "translations": {
+        "en": "table",
+        "es-ES": "mesa",
+        "de-DE": "Tisch",
+        "da-DK": "bord",
+        "fr-FR": "table",
+        "it-IT": "tavolo"
+      }
+    },
+    {
+      "id": "home-bed",
+      "category": "Home",
+      "translations": {
+        "en": "bed",
+        "es-ES": "cama",
+        "de-DE": "Bett",
+        "da-DK": "seng",
+        "fr-FR": "lit",
+        "it-IT": "letto"
+      }
+    },
+    {
+      "id": "home-kitchen",
+      "category": "Home",
+      "translations": {
+        "en": "kitchen",
+        "es-ES": "cocina",
+        "de-DE": "Küche",
+        "da-DK": "køkken",
+        "fr-FR": "cuisine",
+        "it-IT": "cucina"
+      }
+    },
+    {
+      "id": "home-bathroom",
+      "category": "Home",
+      "translations": {
+        "en": "bathroom",
+        "es-ES": "baño",
+        "de-DE": "Badezimmer",
+        "da-DK": "badeværelse",
+        "fr-FR": "salle de bain",
+        "it-IT": "bagno"
+      }
+    },
+    {
+      "id": "home-garden",
+      "category": "Home",
+      "translations": {
+        "en": "garden",
+        "es-ES": "jardín",
+        "de-DE": "Garten",
+        "da-DK": "have",
+        "fr-FR": "jardin",
+        "it-IT": "giardino"
+      }
+    },
+    {
+      "id": "home-lamp",
+      "category": "Home",
+      "translations": {
+        "en": "lamp",
+        "es-ES": "lámpara",
+        "de-DE": "Lampe",
+        "da-DK": "lampe",
+        "fr-FR": "lampe",
+        "it-IT": "lampada"
+      }
+    },
+    {
+      "id": "home-floor",
+      "category": "Home",
+      "translations": {
+        "en": "floor",
+        "es-ES": "suelo",
+        "de-DE": "Boden",
+        "da-DK": "gulv",
+        "fr-FR": "sol",
+        "it-IT": "pavimento"
+      }
+    },
+    {
+      "id": "home-wall",
+      "category": "Home",
+      "translations": {
+        "en": "wall",
+        "es-ES": "pared",
+        "de-DE": "Wand",
+        "da-DK": "væg",
+        "fr-FR": "mur",
+        "it-IT": "parete"
+      }
+    },
+    {
+      "id": "home-roof",
+      "category": "Home",
+      "translations": {
+        "en": "roof",
+        "es-ES": "techo",
+        "de-DE": "Dach",
+        "da-DK": "tag",
+        "fr-FR": "toit",
+        "it-IT": "tetto"
+      }
+    },
+    {
+      "id": "nature-sun",
+      "category": "Nature",
+      "translations": {
+        "en": "sun",
+        "es-ES": "sol",
+        "de-DE": "Sonne",
+        "da-DK": "sol",
+        "fr-FR": "soleil",
+        "it-IT": "sole"
+      }
+    },
+    {
+      "id": "nature-moon",
+      "category": "Nature",
+      "translations": {
+        "en": "moon",
+        "es-ES": "luna",
+        "de-DE": "Mond",
+        "da-DK": "måne",
+        "fr-FR": "lune",
+        "it-IT": "luna"
+      }
+    },
+    {
+      "id": "nature-tree",
+      "category": "Nature",
+      "translations": {
+        "en": "tree",
+        "es-ES": "árbol",
+        "de-DE": "Baum",
+        "da-DK": "træ",
+        "fr-FR": "arbre",
+        "it-IT": "albero"
+      }
+    },
+    {
+      "id": "nature-flower",
+      "category": "Nature",
+      "translations": {
+        "en": "flower",
+        "es-ES": "flor",
+        "de-DE": "Blume",
+        "da-DK": "blomst",
+        "fr-FR": "fleur",
+        "it-IT": "fiore"
+      }
+    },
+    {
+      "id": "nature-river",
+      "category": "Nature",
+      "translations": {
+        "en": "river",
+        "es-ES": "río",
+        "de-DE": "Fluss",
+        "da-DK": "flod",
+        "fr-FR": "rivière",
+        "it-IT": "fiume"
+      }
+    },
+    {
+      "id": "nature-mountain",
+      "category": "Nature",
+      "translations": {
+        "en": "mountain",
+        "es-ES": "montaña",
+        "de-DE": "Berg",
+        "da-DK": "bjerg",
+        "fr-FR": "montagne",
+        "it-IT": "montagna"
+      }
+    },
+    {
+      "id": "nature-sea",
+      "category": "Nature",
+      "translations": {
+        "en": "sea",
+        "es-ES": "mar",
+        "de-DE": "Meer",
+        "da-DK": "hav",
+        "fr-FR": "mer",
+        "it-IT": "mare"
+      }
+    },
+    {
+      "id": "nature-rain",
+      "category": "Nature",
+      "translations": {
+        "en": "rain",
+        "es-ES": "lluvia",
+        "de-DE": "Regen",
+        "da-DK": "regn",
+        "fr-FR": "pluie",
+        "it-IT": "pioggia"
+      }
+    },
+    {
+      "id": "nature-snow",
+      "category": "Nature",
+      "translations": {
+        "en": "snow",
+        "es-ES": "nieve",
+        "de-DE": "Schnee",
+        "da-DK": "sne",
+        "fr-FR": "neige",
+        "it-IT": "neve"
+      }
+    },
+    {
+      "id": "nature-wind",
+      "category": "Nature",
+      "translations": {
+        "en": "wind",
+        "es-ES": "viento",
+        "de-DE": "Wind",
+        "da-DK": "vind",
+        "fr-FR": "vent",
+        "it-IT": "vento"
+      }
+    },
+    {
+      "id": "nature-forest",
+      "category": "Nature",
+      "translations": {
+        "en": "forest",
+        "es-ES": "bosque",
+        "de-DE": "Wald",
+        "da-DK": "skov",
+        "fr-FR": "forêt",
+        "it-IT": "foresta"
+      }
+    },
+    {
+      "id": "nature-star",
+      "category": "Nature",
+      "translations": {
+        "en": "star",
+        "es-ES": "estrella",
+        "de-DE": "Stern",
+        "da-DK": "stjerne",
+        "fr-FR": "étoile",
+        "it-IT": "stella"
+      }
+    },
+    {
+      "id": "colours-red",
+      "category": "Colours",
+      "translations": {
+        "en": "red",
+        "es-ES": "rojo",
+        "de-DE": "rot",
+        "da-DK": "rød",
+        "fr-FR": "rouge",
+        "it-IT": "rosso"
+      }
+    },
+    {
+      "id": "colours-blue",
+      "category": "Colours",
+      "translations": {
+        "en": "blue",
+        "es-ES": "azul",
+        "de-DE": "blau",
+        "da-DK": "blå",
+        "fr-FR": "bleu",
+        "it-IT": "blu"
+      }
+    },
+    {
+      "id": "colours-green",
+      "category": "Colours",
+      "translations": {
+        "en": "green",
+        "es-ES": "verde",
+        "de-DE": "grün",
+        "da-DK": "grøn",
+        "fr-FR": "vert",
+        "it-IT": "verde"
+      }
+    },
+    {
+      "id": "colours-yellow",
+      "category": "Colours",
+      "translations": {
+        "en": "yellow",
+        "es-ES": "amarillo",
+        "de-DE": "gelb",
+        "da-DK": "gul",
+        "fr-FR": "jaune",
+        "it-IT": "giallo"
+      }
+    },
+    {
+      "id": "colours-black",
+      "category": "Colours",
+      "translations": {
+        "en": "black",
+        "es-ES": "negro",
+        "de-DE": "schwarz",
+        "da-DK": "sort",
+        "fr-FR": "noir",
+        "it-IT": "nero"
+      }
+    },
+    {
+      "id": "colours-white",
+      "category": "Colours",
+      "translations": {
+        "en": "white",
+        "es-ES": "blanco",
+        "de-DE": "weiß",
+        "da-DK": "hvid",
+        "fr-FR": "blanc",
+        "it-IT": "bianco"
+      }
+    },
+    {
+      "id": "colours-orange",
+      "category": "Colours",
+      "translations": {
+        "en": "orange",
+        "es-ES": "naranja",
+        "de-DE": "orange",
+        "da-DK": "orange",
+        "fr-FR": "orange",
+        "it-IT": "arancione"
+      }
+    },
+    {
+      "id": "colours-purple",
+      "category": "Colours",
+      "translations": {
+        "en": "purple",
+        "es-ES": "morado",
+        "de-DE": "lila",
+        "da-DK": "lilla",
+        "fr-FR": "violet",
+        "it-IT": "viola"
+      }
+    },
+    {
+      "id": "colours-pink",
+      "category": "Colours",
+      "translations": {
+        "en": "pink",
+        "es-ES": "rosa",
+        "de-DE": "rosa",
+        "da-DK": "lyserød",
+        "fr-FR": "rose",
+        "it-IT": "rosa"
+      }
+    },
+    {
+      "id": "colours-brown",
+      "category": "Colours",
+      "translations": {
+        "en": "brown",
+        "es-ES": "marrón",
+        "de-DE": "braun",
+        "da-DK": "brun",
+        "fr-FR": "marron",
+        "it-IT": "marrone"
+      }
+    },
+    {
+      "id": "colours-grey",
+      "category": "Colours",
+      "translations": {
+        "en": "grey",
+        "es-ES": "gris",
+        "de-DE": "grau",
+        "da-DK": "grå",
+        "fr-FR": "gris",
+        "it-IT": "grigio"
+      }
+    },
+    {
+      "id": "colours-gold",
+      "category": "Colours",
+      "translations": {
+        "en": "gold",
+        "es-ES": "dorado",
+        "de-DE": "golden",
+        "da-DK": "gylden",
+        "fr-FR": "doré",
+        "it-IT": "dorato"
+      }
+    },
+    {
+      "id": "common-verbs-eat",
+      "category": "Common Verbs",
+      "translations": {
+        "en": "to eat",
+        "es-ES": "comer",
+        "de-DE": "essen",
+        "da-DK": "spise",
+        "fr-FR": "manger",
+        "it-IT": "mangiare"
+      }
+    },
+    {
+      "id": "common-verbs-drink",
+      "category": "Common Verbs",
+      "translations": {
+        "en": "to drink",
+        "es-ES": "beber",
+        "de-DE": "trinken",
+        "da-DK": "drikke",
+        "fr-FR": "boire",
+        "it-IT": "bere"
+      }
+    },
+    {
+      "id": "common-verbs-read",
+      "category": "Common Verbs",
+      "translations": {
+        "en": "to read",
+        "es-ES": "leer",
+        "de-DE": "lesen",
+        "da-DK": "læse",
+        "fr-FR": "lire",
+        "it-IT": "leggere"
+      }
+    },
+    {
+      "id": "common-verbs-write",
+      "category": "Common Verbs",
+      "translations": {
+        "en": "to write",
+        "es-ES": "escribir",
+        "de-DE": "schreiben",
+        "da-DK": "skrive",
+        "fr-FR": "écrire",
+        "it-IT": "scrivere"
+      }
+    },
+    {
+      "id": "common-verbs-sleep",
+      "category": "Common Verbs",
+      "translations": {
+        "en": "to sleep",
+        "es-ES": "dormir",
+        "de-DE": "schlafen",
+        "da-DK": "sove",
+        "fr-FR": "dormir",
+        "it-IT": "dormire"
+      }
+    },
+    {
+      "id": "common-verbs-run",
+      "category": "Common Verbs",
+      "translations": {
+        "en": "to run",
+        "es-ES": "correr",
+        "de-DE": "laufen",
+        "da-DK": "løbe",
+        "fr-FR": "courir",
+        "it-IT": "correre"
+      }
+    },
+    {
+      "id": "common-verbs-swim",
+      "category": "Common Verbs",
+      "translations": {
+        "en": "to swim",
+        "es-ES": "nadar",
+        "de-DE": "schwimmen",
+        "da-DK": "svømme",
+        "fr-FR": "nager",
+        "it-IT": "nuotare"
+      }
+    },
+    {
+      "id": "common-verbs-sing",
+      "category": "Common Verbs",
+      "translations": {
+        "en": "to sing",
+        "es-ES": "cantar",
+        "de-DE": "singen",
+        "da-DK": "synge",
+        "fr-FR": "chanter",
+        "it-IT": "cantare"
+      }
+    },
+    {
+      "id": "common-verbs-dance",
+      "category": "Common Verbs",
+      "translations": {
+        "en": "to dance",
+        "es-ES": "bailar",
+        "de-DE": "tanzen",
+        "da-DK": "danse",
+        "fr-FR": "danser",
+        "it-IT": "ballare"
+      }
+    },
+    {
+      "id": "common-verbs-play",
+      "category": "Common Verbs",
+      "translations": {
+        "en": "to play",
+        "es-ES": "jugar",
+        "de-DE": "spielen",
+        "da-DK": "lege",
+        "fr-FR": "jouer",
+        "it-IT": "giocare"
+      }
+    },
+    {
+      "id": "common-verbs-learn",
+      "category": "Common Verbs",
+      "translations": {
+        "en": "to learn",
+        "es-ES": "aprender",
+        "de-DE": "lernen",
+        "da-DK": "lære",
+        "fr-FR": "apprendre",
+        "it-IT": "imparare"
+      }
+    },
+    {
+      "id": "common-verbs-speak",
+      "category": "Common Verbs",
+      "translations": {
+        "en": "to speak",
+        "es-ES": "hablar",
+        "de-DE": "sprechen",
+        "da-DK": "tale",
+        "fr-FR": "parler",
+        "it-IT": "parlare"
+      }
+    }
+  ]
+}
