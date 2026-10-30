@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Word Snake browser smoke test — development only</title>
+<style>body{font:16px system-ui;margin:24px}#log{white-space:pre-wrap}</style>
+</head>
+<body data-smoke-status="running">
+<h1>Word Snake development browser smoke test</h1>
+<p id="log">Starting…</p>
+<iframe id="candidate" title="Word Snake migration candidate" src="../launcher-migration-candidate/?demo=1" style="width:1100px;height:820px;border:1px solid"></iframe>
+<script>
+(async () => {
+  const log=document.getElementById("log");
+  const fail=(why)=>{document.body.dataset.smokeStatus="failed";log.textContent="FAIL: "+why;console.error(log.textContent);};
+  const assert=(ok,why)=>{if(!ok)throw Error(why);};
+  const until=async (fn,timeout=11000)=>{
+    const start=Date.now();
+    while(Date.now()-start<timeout){
+      try{const result=fn();if(result)return result;}catch(e){if(e?.name!=="SecurityError")throw e;}
+      await new Promise(resolve=>setTimeout(resolve,100));
+    }
+    throw Error("Timed out waiting for Word Snake gameplay");
+  };
+  try {
+    const candidate=document.getElementById("candidate");
+    const game=await until(()=>{
+      const doc=candidate.contentDocument;
+      const frame=doc?.getElementById("snakeFrame");
+      const inner=frame?.contentDocument;
+      if(!inner?.getElementById("game")?.classList.contains("active"))return null;
+      return {candidate:doc, frame, doc:inner, win:frame.contentWindow};
+    });
+    const q=id=>game.doc.getElementById(id);
+    assert(game.candidate.body.textContent.includes("MIGRATION CANDIDATE · DEMO SET"),"Missing demo warning banner");
+    assert(q("canvas")?.width>0&&q("canvas")?.height>0,"Canvas was not initialized");
+    assert(q("score")?.textContent==="0","Initial score is not zero");
+    assert(q("lives")?.textContent==="❤❤❤","Initial lives are not three");
+    assert(q("target")?.textContent.includes("FIND:"),"Vocabulary target is missing");
+    for(const name of ["touchUp","touchDown","touchLeft","touchRight"])assert(q(name),"Missing mobile steering: "+name);
+    q("pause").click();
+    assert(q("pauseOverlay").classList.contains("show"),"Pause did not show overlay");
+    q("pause").click();
+    assert(!q("pauseOverlay").classList.contains("show"),"Resume did not remove overlay");
+    game.win.dispatchEvent(new KeyboardEvent("keydown",{key:"ArrowUp",bubbles:true,cancelable:true}));
+    q("touchDown").dispatchEvent(new PointerEvent("pointerdown",{pointerId:1,pointerType:"touch",bubbles:true,cancelable:true}));
+    q("restart").click();
+    assert(q("score").textContent==="0","Restart did not reset score");
+    assert(q("lives").textContent==="❤❤❤","Restart did not reset lives");
+    assert(q("game").classList.contains("active"),"Restart did not keep game active");
+    document.body.dataset.smokeStatus="passed";
+    log.textContent="PASS: demo launched, canvas rendered, target and lives shown, pause/resume, keyboard/touch controls, restart.";
+    console.info(log.textContent);
+  } catch(error){ fail(error?.stack||String(error)); }
+})();
+</script>
+</body>
+</html>
