@@ -1,5 +1,6 @@
 // Boring Teacher multilingual vocabulary V2 adapter (development only).
-// Preserves Word Snake's existing [target, prompt] pair order.
+// Set-first dashboard and Word Snake engine use [prompt, target] order.
+// Source content remains the centralized V2 concept library; no auto-translations.
 export const LANGUAGE_OPTIONS = Object.freeze([
   {locale:"en-US",key:"en",label:"English"},
   {locale:"es-ES",key:"es-ES",label:"Spanish"},
@@ -19,7 +20,7 @@ export function categoriesForPair(library,promptLocale="en-US",targetLocale="es-
     if(!concept||typeof concept.category!=="string"||!concept.translations)continue;
     const prompt=concept.translations[promptKey],target=concept.translations[targetKey];
     if(typeof prompt!=="string"||!prompt.trim()||typeof target!=="string"||!target.trim())continue;
-    (categories[concept.category]??=[]).push([target.trim(),prompt.trim()]);
+    (categories[concept.category]??=[]).push([prompt.trim(),target.trim()]);
   }
   return Object.fromEntries(Object.entries(categories).filter(([,pairs])=>pairs.length>=5));
 }

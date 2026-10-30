@@ -7,6 +7,7 @@ on:
   pull_request:
     branches:
       - main
+      - develop
   workflow_dispatch:
 
 permissions:
@@ -34,7 +35,7 @@ jobs:
           done
 
       - name: Run release invariant tests
-        run: node --test tests/static.test.mjs
+        run: node --test tests/*.test.mjs
 
       - name: Test real preview gameplay in headless Chrome
         shell: bash
@@ -63,3 +64,28 @@ jobs:
             tail -60 /tmp/word-snake-chrome.log || true
             exit 1
           fi
+
+      - name: Install Playwright browser automation client
+        run: npm install --no-save --no-package-lock playwright-core@1.56.1
+
+      - name: Exercise canonical launcher with a mocked API
+        shell: bash
+        run: |
+          set -euo pipefail
+          export CHROME_BIN="$(command -v google-chrome || command -v chromium || command -v google-chrome-stable)"
+          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/word-snake-http2.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8765/index.html >/dev/null; then break; fi
+            sleep 1
+          done
+          node tests/launcher-e2e.mjs
+
+      - name: Preserve mobile screenshot for review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: word-snake-mobile-smoke
+          path: tests/artifacts/
+          if-no-files-found: ignore
