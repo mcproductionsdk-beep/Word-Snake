@@ -20,7 +20,7 @@ const sharing=createSharingClient({apiBaseUrl:"https://boringteacher-vocabulary-
 const voice=createVoiceService();
 const id=readStudentSetId(location.href);
 const demo=new URLSearchParams(location.search).get("demo")==="1";
-const demoSet={title:"Word Snake · Launcher Migration Demo",promptLanguage:"en-US",language:"es-ES",pairs:[["gato","cat"],["perro","dog"],["pájaro","bird"],["pez","fish"],["caballo","horse"],["vaca","cow"],["oveja","sheep"],["ratón","mouse"],["conejo","rabbit"],["pato","duck"]]};
+const demoSet={title:"Word Snake · Launcher Migration Demo",promptLanguage:"en-US",language:"es-ES",pairs:[["cat","gato"],["dog","perro"],["bird","pájaro"],["fish","pez"],["horse","caballo"],["cow","vaca"],["sheep","oveja"],["mouse","ratón"],["rabbit","conejo"],["duck","pato"]]};
 let ready=false,pending=null,started=false,timeout=null;
 const home=()=>location.assign(HOME);
 function fail(message){
