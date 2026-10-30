@@ -111,7 +111,7 @@ try{
   await page.goto(base+"/?autoplay=1#set=html");
   await frame.locator("#game.active").waitFor({timeout:15000});
   assert.equal(await frame.locator("#target img").count(),0,"untrusted vocabulary must not be parsed as markup");
-  assert.equal(await frame.locator("#target").evaluate(el=>el.textContent.includes("<img")),true);
+  assert.equal(await frame.locator("#target").evaluate(el=>el.textContent.toLowerCase().includes("<img")),true);
   assert.equal(await frame.locator("#target").evaluate(()=>window.__BT_XSS_TEST||0),0);
   console.log("PASS: untrusted vocabulary is rendered as text only");
 
