@@ -91,7 +91,7 @@ try {
   assert.equal(await game.locator("#touchUp").isVisible(),true);
   const arrow=await game.locator("#touchUp").boundingBox();
   const board=await game.locator("#wrap").boundingBox();
-  assert.ok(arrow&&board&&arrow.y<board.y,"Mobile arrow controls must appear above the game board");
+  assert.ok(arrow&&board&&arrow.y>=board.y+board.height-1,"Mobile arrow controls must appear below the game board");
   assert.ok(await game.locator("#target").evaluate(el=>parseFloat(getComputedStyle(el).fontSize)>=18),"Mobile vocabulary target is too small");
   for(const control of ["touchUp","touchDown","touchLeft","touchRight"]) {
     assert.equal(await game.locator("#"+control).isVisible(),true,control+" not visible");
@@ -100,7 +100,7 @@ try {
   await game.locator("#restart").click();
   assert.equal(await game.locator("#game.active").count(),1);
   await page.screenshot({path:"tests/artifacts/word-snake-mobile.png",fullPage:true});
-  console.log("PASS: mobile arrows above board, larger vocabulary prompt, steering and restart");
+  console.log("PASS: mobile arrows below board, larger vocabulary prompt, steering and restart");
 
   await game.locator("#mainMenu").click();
   await page.waitForURL("https://boringteacher.com/#set="+id,{timeout:15000});
