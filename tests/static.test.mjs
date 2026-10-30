@@ -81,3 +81,18 @@ test("demo fixture uses homepage [prompt,target] order", () => {
   assert.match(html, /\["cat","gato"\]/);
   assert.doesNotMatch(html, /\["gato","cat"\]/);
 });
+
+test("preview-only tester supplies vocabulary selection and Main Menu recovery", () => {
+  const html=read("preview/index.html");
+  for(const item of ["id=\"promptLanguage\"","id=\"language\"","id=\"category\"","id=\"words\"","id=\"play\"","id=\"save\"","id=\"gameFrame\""]) {
+    assert.ok(html.includes(item), "Missing test menu control: "+item);
+  }
+  assert.match(html,/WAREHOUSE_CATEGORIES/);
+  assert.match(html,/validateSet/);
+  assert.match(html,/sharing\.saveSet\(set\)/);
+  assert.match(html,/BT_SNAKE_MENU/);
+  assert.match(html,/frame\.classList\.remove\("playing"\)/);
+  assert.match(html,/location\.hostname\.endsWith\("\.pages\.dev"\)/);
+  assert.match(read("index.html"),/previewReturn/);
+  assert.match(read("launcher-migration-candidate\/index.html"),/new URL\("\.\.\/preview\/",location\.href\)/);
+});
