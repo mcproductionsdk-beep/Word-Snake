@@ -115,7 +115,7 @@ function parse(text){
       const split=line.split(separator);
       if(split.length===2){fields=split.map(s=>s.trim());break;}
     }
-    if(!fields||fields.some(s=>!s)){rejected.push(i+1);continue;}
+    if(!fields||fields.some(s=>!s)){rejected.push(i+1);return;}
     pairs.push(fields);
   });
   return {pairs,rejected};
