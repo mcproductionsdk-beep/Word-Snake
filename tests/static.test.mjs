@@ -42,7 +42,7 @@ test("migration preview remains isolated and clearly labeled", () => {
   assert.match(html, /<base href="\.\.\/"/);
   assert.match(html, /MIGRATION CANDIDATE · DEMO SET/);
   assert.match(html, /new URLSearchParams\(location\.search\)\.get\("demo"\)==="1"/);
-  assert.match(html, /mobile-release-candidate\/snake-game\.html/);
+  assert.match(html, /snake-game\.html\?candidate=universal-launcher-mobile-v1/);
   assert.match(html, /BT_SNAKE_START/);
   assert.match(html, /BT_SNAKE_STARTED/);
   assert.match(html, /BT_SNAKE_START_FAILED/);
