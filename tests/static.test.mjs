@@ -87,7 +87,10 @@ test("preview-only tester supplies vocabulary selection and Main Menu recovery",
   for(const item of ["id=\"promptLanguage\"","id=\"language\"","id=\"category\"","id=\"words\"","id=\"play\"","id=\"save\"","id=\"gameFrame\""]) {
     assert.ok(html.includes(item), "Missing test menu control: "+item);
   }
-  assert.match(html,/WAREHOUSE_CATEGORIES/);
+  assert.match(html,/categoriesForPair/);
+  assert.match(html,/vocabulary-v2\.json/);
+  assert.match(html,/onLanguageChange/);
+  assert.match(html,/staleCustom/);
   assert.match(html,/validateSet/);
   assert.match(html,/sharing\.saveSet\(set\)/);
   assert.match(html,/BT_SNAKE_MENU/);
