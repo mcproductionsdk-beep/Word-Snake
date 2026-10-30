@@ -62,6 +62,7 @@ try{
     await page.goto(base+"/");
     await page.goto(base+"/?autoplay=1&returnTo=dashboard#set="+id);
     await frame.locator("#game.active").waitFor({timeout:15000});
+    await page.waitForFunction(locale=>{const engine=document.querySelector("#snakeFrame")?.contentDocument;return engine?.getElementById("game")?.classList.contains("active")&&engine?.getElementById("language")?.value===locale;},data.language,{timeout:15000});
     assert.equal(await page.locator("#app[hidden]").count(),1,id);
     assert.equal(await frame.locator("#language").inputValue(),data.language,id+" locale");
     assert.equal(await frame.locator("#score").innerText(),"0");
