@@ -89,7 +89,7 @@ var COLS=30,ROWS=20,W=900,H=600,DPR=1,vocab=[],queue=[],current=null,foods=[],sn
 function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
 function build(){queue=shuffle(vocab);queue=queue.concat(shuffle(vocab.filter(function(v){return(misses[v.id]||0)>0})));done=0}
 function next(){if(!queue.length){round++;step=Math.max(.085,step*.91);build();flash("ROUND "+round+" · SNAKE SPEED UP!",1)}current=queue.shift();hud();ensureCorrectFood()}
-function hud(){E("score").textContent=score;E("lives").textContent="❤".repeat(Math.max(0,lives));E("target").innerHTML="FIND: <b>"+current.prompt.toUpperCase()+"</b>";E("progress").textContent="ROUND "+round+" · "+Math.min(done,vocab.length)+"/"+vocab.length+" WORDS"}
+function hud(){E("score").textContent=score;E("lives").textContent="❤".repeat(Math.max(0,lives));var target=E("target"),word=document.createElement("b");word.textContent=current.prompt.toUpperCase();target.replaceChildren(document.createTextNode("FIND: "),word);E("progress").textContent="ROUND "+round+" · "+Math.min(done,vocab.length)+"/"+vocab.length+" WORDS"}
 /* Food cards are full collision targets; placement reserves their entire visual footprint. */
 function foodGeometry(f){
  var cw=W/COLS,ch=H/ROWS,x=(f.x+.5)*cw,y=(f.y+.5)*ch;
