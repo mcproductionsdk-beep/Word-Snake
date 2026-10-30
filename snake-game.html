@@ -2,6 +2,27 @@
 <title>Word Snake Pixel V2.3</title><style>
 *{box-sizing:border-box}body{margin:0;background:#16264e;color:#fff;font-family:"Courier New",monospace;image-rendering:pixelated}.app{width:min(1120px,calc(100vw - 12px));margin:6px auto;padding:10px;background:#203a67;border:5px solid #0c1938;box-shadow:0 0 0 4px #f2d64b}.logo{text-align:center;font:900 clamp(27px,4vw,44px) "Courier New";letter-spacing:4px;color:#78df62;text-shadow:4px 4px #0c1938;margin:4px}.screen{display:none}.screen.active{display:block}.grid{display:grid;grid-template-columns:1.35fr .75fr;gap:12px}.card{background:#f6e8bd;color:#15254a;border:4px solid #101a43;padding:12px;box-shadow:inset 0 0 0 3px #fff7dc}h2{color:#26713d;font-size:18px;margin:0 0 8px}.help{color:#294361;font-size:13px;font-weight:bold;line-height:1.4}textarea,select{width:100%;background:#fff8dc;color:#15254a;border:4px solid #101a43;padding:9px;font:700 14px "Courier New"}textarea{height:min(38vh,285px);min-height:180px}button{font:900 14px "Courier New";padding:10px 14px;margin:4px;border:4px solid #101a43;background:#5cc7d8;color:#101a43;cursor:pointer;box-shadow:inset -3px -3px #2c7794,inset 3px 3px #c4ffff}.primary{background:#78df62}.yellow{background:#f2d64b}.pink{background:#ef6689}.wide{width:100%;font-size:18px}.preview{margin-top:8px;padding:9px;background:#d9eff1;color:#19324e;border:3px solid #19324e;font-size:12px}.error{color:#b9223e;min-height:18px;font-weight:bold}.voiceCheck{margin-top:8px;padding:8px;background:#d9eff1;color:#19324e;border:3px solid #19324e;font-size:12px;font-weight:bold;line-height:1.45}.voiceGood{color:#26713d}.voiceBad{color:#b9223e}.voiceWait{color:#795d00}.hud{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;margin:7px 0;font:900 13px "Courier New";text-shadow:2px 2px #0c1938}.target{text-align:center;background:#f2d64b;color:#15254a;border:4px solid #101a43;padding:7px;font-size:clamp(14px,2vw,21px);text-shadow:none}.progress{text-align:right}.wrap{height:min(68vh,650px);max-height:calc(100vh - 170px);min-height:400px;position:relative;border:4px solid #0c1938;background:#112c3d;overflow:hidden}canvas{width:100%;height:100%;display:block;image-rendering:pixelated}.buttons{text-align:center}.tip{text-align:center;font-size:11px;font-weight:bold;color:#d9edff}.overlay{display:none;position:absolute;inset:0;background:#0c1938e8;z-index:5;align-items:center;justify-content:center;text-align:center}.overlay.show{display:flex}.big{font:900 clamp(28px,5vw,48px) "Courier New";color:#ef6689;text-shadow:4px 4px #000}.msg{font:900 clamp(17px,2.4vw,27px) "Courier New";margin:10px}.toast{display:none;position:absolute;left:50%;top:10%;transform:translateX(-50%);z-index:4;font:900 24px "Courier New";text-shadow:3px 3px #0c1938}.app.expanded{position:fixed;inset:0;z-index:99999;width:100vw;height:100vh;margin:0;max-width:none;padding:8px;border:0;box-shadow:none}.app.expanded #game.active{height:calc(100vh - 62px);display:flex;flex-direction:column}.app.expanded .wrap{flex:1;height:auto;max-height:none;min-height:0}.app:fullscreen,.app:-webkit-full-screen{width:100vw;height:100vh;margin:0;max-width:none;padding:10px;border:0;box-shadow:none}.app:fullscreen #game.active,.app:-webkit-full-screen #game.active{height:calc(100vh - 68px);display:flex;flex-direction:column}.app:fullscreen .wrap,.app:-webkit-full-screen .wrap{flex:1;height:auto;max-height:none;min-height:0}@media(max-width:760px){.grid{grid-template-columns:1fr}.hud{grid-template-columns:1fr 1fr}.target{grid-column:1/-1;grid-row:1}.wrap{height:62vh;max-height:none}}
 
+/* BT mobile utility bar v1: gameplay-only controls, desktop untouched. */
+@media(max-width:760px){
+  #game .buttons{order:1;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;margin:4px 0 7px;align-items:stretch}
+  #game .buttons button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:0;min-height:48px;margin:0;padding:5px 2px;border-width:2px;font-size:0;line-height:1.1;overflow-wrap:normal;touch-action:manipulation}
+  #game .buttons button::before{font:900 19px/1 "Courier New",monospace;display:block}
+  #game .buttons button::after{font:900 clamp(8px,2.3vw,11px)/1.15 "Courier New",monospace;display:block}
+  #game #pause::before{content:"Ⅱ"} #game #pause::after{content:"PAUSE"}
+  #game:has(#pauseOverlay.show) #pause::before{content:"▶"} #game:has(#pauseOverlay.show) #pause::after{content:"RESUME"}
+  #game #restart::before{content:"↻"} #game #restart::after{content:"RESTART"}
+  #game #mainMenu::before{content:"⌂"} #game #mainMenu::after{content:"MENU"}
+  #game #fullscreen::before{content:"⛶"} #game #fullscreen::after{content:"EXPAND"}
+  #game #sound::before{content:"♫"} #game #sound::after{content:"SOUND"}
+  #game #sound[data-bt-muted="true"]::before{content:"♪"} #game #sound[data-bt-muted="true"]::after{content:"MUTED"}
+  #game .buttons button:focus-visible{outline:3px solid #fff;outline-offset:2px}
+}
+@media(max-width:390px){
+  #game .buttons{grid-template-columns:repeat(6,minmax(0,1fr))}
+  #game .buttons button:nth-child(-n+3){grid-column:span 2}
+  #game .buttons button:nth-child(n+4){grid-column:span 3}
+}
+
 /* Mobile-only adaptation; desktop rules above remain unchanged. */
 .mobile-controls{display:none}
 @media(max-width:760px){
@@ -165,7 +186,7 @@ function pause(){if(!running)return;paused=!paused;E("pauseOverlay").classList.t
 E("again").onclick=function(){start(activePairs,lang)};E("restart").onclick=function(){start(activePairs,lang)};E("pause").onclick=pause;
 function exitToCore(){parent.postMessage({type:"BT_SNAKE_CANCEL_SPEECH"},location.origin);running=false;paused=false;cancelAnimationFrame(raf);game.classList.remove("active");parent.postMessage({type:"BT_SNAKE_MENU"},location.origin)}
 E("mainMenu").onclick=exitToCore;E("overMenu").onclick=exitToCore;
-E("sound").onclick=function(){soundOn=!soundOn;if(!soundOn)parent.postMessage({type:"BT_SNAKE_CANCEL_SPEECH"},location.origin);this.textContent=soundOn?"🔊 SOUND ON":"🔇 SOUND OFF"};var fsBtn=E("fullscreen"),fsTarget=document.querySelector(".app"),expanded=false;
+E("sound").onclick=function(){soundOn=!soundOn;if(!soundOn)parent.postMessage({type:"BT_SNAKE_CANCEL_SPEECH"},location.origin);this.textContent=soundOn?"🔊 SOUND ON":"🔇 SOUND OFF";this.dataset.btMuted=String(!soundOn)};var fsBtn=E("fullscreen"),fsTarget=document.querySelector(".app"),expanded=false;
 function embedded(){try{return window.self!==window.top}catch(e){return true}}
 function fsEl(){return document.fullscreenElement||document.webkitFullscreenElement||null}
 function setExpanded(on){
