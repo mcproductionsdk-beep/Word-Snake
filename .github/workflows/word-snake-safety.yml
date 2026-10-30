@@ -1,0 +1,65 @@
+name: Word Snake — development safety checks
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  static-and-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Check out exact revision
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Check syntax of maintained JavaScript modules
+        shell: bash
+        run: |
+          set -euo pipefail
+          for f in core/*.js; do
+            node --check "$f"
+          done
+
+      - name: Run release invariant tests
+        run: node --test tests/static.test.mjs
+
+      - name: Test real preview gameplay in headless Chrome
+        shell: bash
+        run: |
+          set -euo pipefail
+          CHROME_BIN="$(command -v google-chrome || command -v chromium || command -v google-chrome-stable || true)"
+          if [ -z "$CHROME_BIN" ]; then
+            echo "Chrome is missing. The browser test cannot be skipped." >&2
+            exit 1
+          fi
+          echo "Using $CHROME_BIN"
+          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/word-snake-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8765/launcher-migration-candidate/ > /dev/null; then break; fi
+            sleep 1
+          done
+          "$CHROME_BIN" --headless=new --no-sandbox --disable-dev-shm-usage --disable-gpu --no-first-run --virtual-time-budget=18000 --dump-dom "http://127.0.0.1:8765/tests/browser-smoke.html" > /tmp/word-snake-browser-dom.html 2> /tmp/word-snake-chrome.log
+          if grep -q 'data-smoke-status="passed"' /tmp/word-snake-browser-dom.html; then
+            echo "Browser smoke passed: demo, game startup, canvas, vocabulary, pause/resume, steering, restart."
+          else
+            echo "Browser smoke FAILED:" >&2
+            grep -o 'data-smoke-status="[^"]*"' /tmp/word-snake-browser-dom.html || true
+            grep -A6 'id="log"' /tmp/word-snake-browser-dom.html | head -30 || true
+            tail -60 /tmp/word-snake-chrome.log || true
+            exit 1
+          fi
