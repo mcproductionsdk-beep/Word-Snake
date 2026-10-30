@@ -57,6 +57,9 @@ try{
 
   const frame=page.frameLocator("#snakeFrame");
   for(const [id,data] of Object.entries(cases)){
+    // A hash-only navigation does not reload the same document. Simulate the
+    // actual homepage -> game transition for each independent language set.
+    await page.goto(base+"/");
     await page.goto(base+"/?autoplay=1&returnTo=dashboard#set="+id);
     await frame.locator("#game.active").waitFor({timeout:15000});
     assert.equal(await page.locator("#app[hidden]").count(),1,id);
