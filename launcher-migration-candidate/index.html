@@ -14,7 +14,7 @@ body{margin:0;background:#10192e;color:#f8f8ff;font-family:"Courier New",monospa
 <script type="module">
 import {createSharingClient,readStudentSetId} from "./core/sharing.js?release=multilingual-20261023b";
 import {createVoiceService} from "./core/voice.js?release=multilingual-20261023b";
-const HOME="https://boringteacher.com/";
+const HOME=location.hostname.endsWith(".pages.dev")||["localhost","127.0.0.1"].includes(location.hostname)?new URL("../preview/",location.href).toString():"https://boringteacher.com/";
 const root=document.getElementById("app"),frame=document.getElementById("snakeFrame");
 const sharing=createSharingClient({apiBaseUrl:"https://boringteacher-vocabulary-api.mcproductionsdk.workers.dev"});
 const voice=createVoiceService();
