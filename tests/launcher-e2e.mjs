@@ -47,6 +47,19 @@ try {
       body:JSON.stringify({error:"Not found"}),
     });
   });
+  await page.route("https://boringteacher-vocabulary-api.mcproductionsdk.workers.dev/sets", async route=>{
+    const request=route.request();
+    assert.equal(request.method(),"POST");
+    const data=request.postDataJSON();
+    assert.equal(data.promptLanguage,"en-US");
+    assert.equal(data.language,"es-ES");
+    assert.ok(data.pairs.some(p=>p[0]==="cat"&&p[1]==="gato"));
+    await route.fulfill({
+      status:200,contentType:"application/json",
+      headers:{"access-control-allow-origin":"*"},
+      body:JSON.stringify({id}),
+    });
+  });
   await page.route("https://boringteacher.com/",route=>route.fulfill({
     status:200,contentType:"text/html",body:"<!doctype html><title>Word Games home</title><h1>WORD GAMES HOME</h1>"
   }));
@@ -105,6 +118,43 @@ try {
   await game.locator("#mainMenu").click();
   await page.waitForURL("https://boringteacher.com/#set="+id,{timeout:15000});
   console.log("PASS: main menu returns to central student set launcher when direct-opened");
+
+
+  // The preview has its own teacher-only tester. It never appears in the actual game.
+  await page.goto(base+"/preview/");
+  assert.equal(await page.locator("#promptLanguage").inputValue(),"en-US");
+  assert.equal(await page.locator("#language").inputValue(),"es-ES");
+  assert.equal(await page.locator("#category").inputValue(),"Animals");
+  assert.match(await page.locator("#words").inputValue(),/cat\tgato/);
+  assert.match(await page.locator("#preview").innerText(),/12 vocabulary pairs/);
+  await page.locator("#play").click();
+  const testerGame=page.frameLocator("#gameFrame");
+  await testerGame.locator("#game.active").waitFor({timeout:15000});
+  assert.equal(await page.locator("#menu[hidden]").count(),1);
+  assert.match(await testerGame.locator("#target").innerText(),/^FIND:\s*[A-Z]+$/);
+  await testerGame.locator("#mainMenu").click();
+  await page.locator("#menu:not([hidden])").waitFor();
+  assert.match(await page.locator("#words").inputValue(),/cat\tgato/);
+  console.log("PASS: preview vocabulary menu → game → same menu, preserving selections");
+
+  // Save and load through the real API contract (mocked here) and return to preview.
+  await page.locator("#save").click();
+  await page.waitForURL(base+"/?returnTo=preview#set="+id,{timeout:15000});
+  const sharedGame=page.frameLocator("#snakeFrame");
+  await sharedGame.locator("#game.active").waitFor({timeout:15000});
+  await sharedGame.locator("#mainMenu").click();
+  await page.waitForURL(base+"/preview/",{timeout:15000});
+  assert.equal(await page.locator("#category").inputValue(),"Animals");
+  assert.match(await page.locator("#words").inputValue(),/cat\tgato/);
+  console.log("PASS: save shared set → canonical launcher → preview menu, preserving vocabulary");
+
+  // Older demo link should also recover into the preview tester, not production.
+  await page.goto(base+"/launcher-migration-candidate/?demo=1");
+  const demoGame=page.frameLocator("#snakeFrame");
+  await demoGame.locator("#game.active").waitFor({timeout:15000});
+  await demoGame.locator("#mainMenu").click();
+  await page.waitForURL(base+"/preview/",{timeout:15000});
+  console.log("PASS: legacy demo's MAIN MENU returns to preview tester");
 
   assert.deepEqual(errors,[],"Page JavaScript errors: "+errors.join("; "));
   console.log("ALL WORD SNAKE LAUNCHER CHECKS PASSED");
