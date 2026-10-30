@@ -1,98 +1,127 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Word Snake — Boring Teacher</title>
-<script>if(new URLSearchParams(location.search).get("autoplay")==="1"&&location.hash.startsWith("#set="))document.documentElement.classList.add("bt-autoplay-pending");</script>
-<link rel="stylesheet" href="./styles/menu.css?release=student-arcade-autoplay-20261023v2">
 <style>
+:root{color-scheme:dark}
+*{box-sizing:border-box}
 body{margin:0;background:#10192e;color:#f8f8ff;font-family:"Courier New",monospace}
-#snakeFrame{display:none;width:100%;height:calc(100dvh - 12px);min-height:600px;border:0;background:#16264e}
+#snakeFrame{display:none;width:100%;height:100dvh;min-height:480px;border:0;background:#16264e}
 #snakeFrame.playing{display:block}
-#app{max-width:1100px;margin:8px auto}#app[hidden]{display:none!important}
-.bt-autoplay-pending #app{visibility:hidden}
-</style></head>
-<body><main id="app"></main><iframe id="snakeFrame" title="Word Snake gameplay" src="./snake-game.html?release=core-20261020"></iframe>
+#app{min-height:100dvh;display:grid;place-items:center;padding:20px}
+#app[hidden]{display:none!important}
+.card{width:min(560px,100%);background:#233958;border:4px solid #7bbaf3;padding:24px;box-shadow:6px 6px #071328}
+h1{margin:0 0 14px;color:#f2d64b;font-size:clamp(24px,6vw,38px)}
+p{line-height:1.6;overflow-wrap:anywhere}
+a{display:inline-block;color:#10192e;background:#f2d64b;border:3px solid #10192e;padding:12px 18px;font-weight:900;text-decoration:none;margin-top:10px}
+a:focus-visible{outline:3px solid white;outline-offset:3px}
+</style>
+</head>
+<body>
+<main id="app" role="status" aria-live="polite">
+  <section class="card">
+    <h1>WORD SNAKE</h1>
+    <p id="message">Loading vocabulary…</p>
+    <a id="home" href="https://boringteacher.com/">RETURN TO WORD GAMES</a>
+  </section>
+</main>
+<iframe id="snakeFrame" title="Word Snake gameplay" src="./snake-game.html?release=word-snake-set-first-20261030"></iframe>
 <script type="module">
-import { mountTeacherMenu,mountStudentMenu } from "./core/menu.js?release=snake-autoplay-no-flash-20261027";
-import { createSharingClient,readStudentSetId } from "./core/sharing.js?release=multilingual-20261023b";
-import { createVoiceService } from "./core/voice.js?release=multilingual-20261023b";
-import { WAREHOUSE_CATEGORIES } from "./core/warehouse-categories.js";
-import { LANGUAGE_OPTIONS,categoriesForPair } from "./core/multilingual-vocabulary-v2.js";
-const root=document.getElementById("app"),frame=document.getElementById("snakeFrame");
+import {createSharingClient,readStudentSetId} from "./core/sharing.js?release=multilingual-20261023b";
+import {createVoiceService} from "./core/voice.js?release=multilingual-20261023b";
+import {isSupportedLocale} from "./core/languages.js?release=multilingual-20261023b";
+
+const HOME="https://boringteacher.com/";
+const root=document.getElementById("app");
+const message=document.getElementById("message");
+const frame=document.getElementById("snakeFrame");
 const sharing=createSharingClient({apiBaseUrl:"https://boringteacher-vocabulary-api.mcproductionsdk.workers.dev"});
-const voice=createVoiceService();let menu=null;
-const instructions="ARROW KEYS / WASD = steer · P = pause. Eat the correct target-language word. Wrong words cost a life. The snake wraps around the edges.";
-// Published central vocabulary library, shared across Boring Teacher games.
-const VOCABULARY_LIBRARY_URL="https://boringteacher.com/libraries/vocabulary/v1.json";
-const options={title:"WORD SNAKE",instructions,categories:WAREHOUSE_CATEGORIES,defaultCategory:"Animals",defaultText:"",defaultPromptLanguage:"en-US",defaultLanguage:"es-ES",previewGameUrl:location.href,onPlay:start};
-const V2_LIBRARY_URL="https://boringteacher.com/libraries/vocabulary/v2.json";
-async function loadMultilingualVocabulary(){
- const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),4500);
- try{
-  const response=await fetch(V2_LIBRARY_URL,{signal:controller.signal,cache:"no-store"});
-  if(!response.ok)throw new Error("V2 HTTP "+response.status);
-  const library=await response.json();
-  if(library.schemaVersion!==2||library.concepts?.length!==96)throw new Error("Invalid V2 library");
-  for(const target of LANGUAGE_OPTIONS){for(const prompt of LANGUAGE_OPTIONS){
-   if(target.locale===prompt.locale)continue;
-   const cats=categoriesForPair(library,prompt.locale,target.locale);
-   if(Object.keys(cats).length!==8||Object.values(cats).some(pairs=>pairs.length!==12))throw new Error("Incomplete V2 "+prompt.locale+" → "+target.locale);
-  }}
-  options.multilingualLibrary=true;
-  options.languageOptions=LANGUAGE_OPTIONS;
-  options.getCategoriesForPair=(prompt,target)=>categoriesForPair(library,prompt,target);
-  console.info("Word Snake: multilingual V2 vocabulary loaded (96 concepts, 6 languages).");
- }catch(error){console.warn("V2 unavailable; falling back to V1 English-prompt menu.",error);}
- finally{clearTimeout(timeout);}
+const voice=createVoiceService();
+const id=readStudentSetId(location.href);
+let ready=false,started=false,pending=null,startTimer=null,finished=false;
+
+function error(text){
+  if(finished)return;
+  clearTimeout(startTimer);
+  pending=null;
+  document.getElementById("home").hidden=false;
+  message.textContent=text;
+  root.hidden=false;
+  frame.classList.remove("playing");
+  voice.cancel();
 }
-async function loadBuiltInVocabulary(){
- const controller=new AbortController();
- const timeout=setTimeout(()=>controller.abort(),3500);
- try{
-  const response=await fetch(VOCABULARY_LIBRARY_URL,{signal:controller.signal,cache:"no-store"});
-  if(!response.ok)throw new Error("Vocabulary library HTTP "+response.status);
-  const library=await response.json();
-  if(library?.schemaVersion!==1||library?.pairOrder?.join(",")!=="target,en"||!library.languages||typeof library.languages!=="object")throw new Error("Unsupported vocabulary library");
-  for(const [locale,categories] of Object.entries(WAREHOUSE_CATEGORIES)){
-   const incoming=library.languages[locale];
-   if(!incoming||typeof incoming!=="object")throw new Error("Missing locale "+locale);
-   for(const category of Object.keys(categories)){
-    const pairs=incoming[category];
-    if(!Array.isArray(pairs)||pairs.length<5||!pairs.every(p=>Array.isArray(p)&&p.length===2&&p.every(w=>typeof w==="string"&&w.trim())))throw new Error("Invalid category "+locale+"/"+category);
-   }
+function send(type,extra={}){
+  frame.contentWindow?.postMessage({type,...extra},location.origin);
+}
+function deliver(){
+  if(ready&&pending){
+    send("BT_SNAKE_START",{vocabulary:pending});
+    pending=null;
   }
-  options.categories=library.languages;
- }catch(error){
-  console.warn("Central vocabulary unavailable; using local built-in categories.",error);
- }finally{clearTimeout(timeout);}
 }
-let snakeReady=false,pendingVocabulary=null;
-function deliverSnake(){
- if(!snakeReady||!pendingVocabulary)return;
- frame.contentWindow.postMessage({type:"BT_SNAKE_START",vocabulary:pendingVocabulary},location.origin);
- pendingVocabulary=null;
+function launch(set){
+  if(finished)return;
+  if(!set||!Array.isArray(set.pairs)||set.pairs.length<5||
+     !isSupportedLocale(set.language)||!isSupportedLocale(set.promptLanguage)||
+     set.language===set.promptLanguage){
+    error("This vocabulary set is invalid or uses unsupported languages. Return to Word Games.");
+    return;
+  }
+  // The homepage and the engine both consume [prompt,target], in that order.
+  pending=set;
+  root.hidden=true;
+  frame.classList.add("playing");
+  started=false;
+  clearTimeout(startTimer);
+  startTimer=setTimeout(()=>{
+    if(!started)error("Word Snake did not start. Return to Word Games and try again.");
+  },12000);
+  deliver();
+  send("BT_SNAKE_PING");
 }
-function start(vocabulary){
- document.documentElement.classList.remove("bt-autoplay-pending");
- pendingVocabulary=vocabulary;
- menu?.destroy();menu=null;root.hidden=true;root.style.setProperty('display','none','important');frame.classList.add("playing");
- deliverSnake();
- frame.contentWindow?.postMessage({type:"BT_SNAKE_PING"},location.origin);
- frame.focus();
+function returnHome(){
+  finished=true;
+  clearTimeout(startTimer);
+  voice.cancel();
+  // Returning through browser history preserves whether the teacher was editing
+  // on the homepage or the student was using its #set= launcher.
+  try{
+    const ref=new URL(document.referrer);
+    if(ref.origin===new URL(HOME).origin&&
+       (ref.pathname==="/"||ref.pathname==="/dev/word-games/")&&
+       history.length>1){
+      history.back();
+      return;
+    }
+  }catch{}
+  const dest=new URL(HOME);
+  if(id)dest.hash="set="+encodeURIComponent(id);
+  location.assign(dest.toString());
 }
-function showMenu(forceTeacher=false){
- frame.classList.remove("playing");root.hidden=false;root.style.removeProperty('display');
- menu?.destroy();menu=null;voice.cancel();
- menu=!forceTeacher&&readStudentSetId(location.href)?mountStudentMenu(root,{sharing,voice},{...options,studentUrl:location.href,onRecover:()=>{history.replaceState(null,"",location.pathname+location.search);showMenu(true);}}):mountTeacherMenu(root,{sharing,voice},options);
-}
-window.addEventListener("message",e=>{
- if(e.origin!==location.origin||e.source!==frame.contentWindow)return;
- if(e.data?.type==="BT_SNAKE_READY"){snakeReady=true;deliverSnake();}
- if(e.data?.type==="BT_SNAKE_SPEAK"&&typeof e.data.text==="string"&&e.data.text.length<=250&&["es-ES","de-DE","da-DK","en-US","fr-FR","it-IT"].includes(e.data.language)){void voice.speak(e.data.text,e.data.language);}
- if(e.data?.type==="BT_SNAKE_CANCEL_SPEECH")voice.cancel();
- if(e.data?.type==="BT_SNAKE_MENU"){if(new URLSearchParams(location.search).get("returnTo")==="dashboard"){location.assign("https://boringteacher.com/dev/word-games/");}else{history.replaceState(null,"",location.pathname+location.search);showMenu(true);}}
- if(e.data?.type==="BT_SNAKE_START_FAILED"){document.documentElement.classList.remove("bt-autoplay-pending");frame.classList.remove("playing");root.hidden=false;root.style.removeProperty('display');root.textContent="Word Snake could not start. Please refresh and try again.";}
+window.addEventListener("message",event=>{
+  if(event.origin!==location.origin||event.source!==frame.contentWindow)return;
+  const data=event.data||{};
+  if(data.type==="BT_SNAKE_READY"){ready=true;deliver();}
+  if(data.type==="BT_SNAKE_STARTED"){started=true;clearTimeout(startTimer);frame.focus();}
+  if(data.type==="BT_SNAKE_START_FAILED")error("Word Snake could not open this vocabulary set. Return to Word Games.");
+  if(data.type==="BT_SNAKE_SPEAK"&&typeof data.text==="string"&&data.text.length<=250&&
+      isSupportedLocale(data.language))void voice.speak(data.text,data.language);
+  if(data.type==="BT_SNAKE_CANCEL_SPEECH")voice.cancel();
+  if(data.type==="BT_SNAKE_MENU")returnHome();
 });
-frame.addEventListener("load",()=>{snakeReady=false;frame.contentWindow?.postMessage({type:"BT_SNAKE_PING"},location.origin);});
-void loadBuiltInVocabulary().then(loadMultilingualVocabulary).finally(()=>showMenu());
-frame.contentWindow?.postMessage({type:"BT_SNAKE_PING"},location.origin);
-</script></body></html>
+frame.addEventListener("load",()=>{ready=false;send("BT_SNAKE_PING");});
+window.addEventListener("pagehide",()=>{clearTimeout(startTimer);voice.cancel();});
+if(!id){
+  error(location.hash?"Invalid or missing vocabulary set ID. Open the link provided by your teacher.":"Select your vocabulary on the Boring Teacher homepage, then choose Word Snake.");
+}else{
+  message.textContent="Loading shared vocabulary…";
+  sharing.loadSet(id).then(launch).catch(err=>
+    error("Unable to load the shared vocabulary: "+(err?.message||"Unknown error")+". Return to Word Games.")
+  );
+}
+send("BT_SNAKE_PING");
+</script>
+</body>
+</html>
