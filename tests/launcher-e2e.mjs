@@ -122,6 +122,7 @@ try {
 
   // The preview has its own teacher-only tester. It never appears in the actual game.
   await page.goto(base+"/preview/");
+  await page.waitForFunction(()=>document.querySelector("#promptLanguage")?.value==="en-US"&&document.querySelector("#category")?.value==="Animals",{},{timeout:12000});
   assert.equal(await page.locator("#promptLanguage").inputValue(),"en-US");
   assert.equal(await page.locator("#language").inputValue(),"es-ES");
   assert.equal(await page.locator("#category").inputValue(),"Animals");
